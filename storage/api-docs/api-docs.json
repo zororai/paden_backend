@@ -1,0 +1,2185 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Your API Title",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Userlogin"
+                ],
+                "summary": "User Login",
+                "description": "Logs in a user and returns user details and redirect URL",
+                "operationId": "d41c2ea50a8fe40296a4130751e9800f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "image": {
+                                                    "type": "string",
+                                                    "format": "url",
+                                                    "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "redirect_url": {
+                                            "type": "string",
+                                            "example": "http://your-app-url/home"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/password/email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send password reset link",
+                "operationId": "f31a67b487328d37c5bee1403fd05bb2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset link sent"
+                    },
+                    "400": {
+                        "description": "Invalid email address"
+                    }
+                }
+            }
+        },
+        "/api/password/reset": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset password",
+                "operationId": "8155a6a93a8067d84838a34777db3e5e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "token",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully"
+                    },
+                    "400": {
+                        "description": "Invalid data or token"
+                    }
+                }
+            }
+        },
+        "/api/useregister": {
+            "post": {
+                "tags": [
+                    "User_Reg"
+                ],
+                "summary": "Register a new user",
+                "description": "Handles the registration of a new user by accepting required fields and returning the user information upon success.",
+                "operationId": "e750fc4fb709a01d5f7c832b58f751cc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "university",
+                                    "type",
+                                    "phone",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "university": {
+                                        "type": "string",
+                                        "example": "Rose of Sharon University"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "user"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User successfully registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully."
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "generated_api_token"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/api/properties/directions/{id}": {
+            "get": {
+                "tags": [
+                    "Property-directions"
+                ],
+                "summary": "Show directions and agent details if payment is made",
+                "description": "This route checks if the user has paid for the property and returns the directions and agent details.",
+                "operationId": "44185ead5f3d024d1d8b596c37db6137",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the property",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "house": {
+                                            "$ref": "#/components/schemas/Properties"
+                                        },
+                                        "agent_details": {
+                                            "$ref": "#/components/schemas/Properties"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Payment required to view agent details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "house": {
+                                            "$ref": "#/components/schemas/Properties"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/directions/pay/{id}": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Initiate and confirm Paynow mobile payment",
+                "operationId": "30fcf0f8ddbb2fe9598f88508c491c14",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "paymentmethod",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0771234567"
+                                    },
+                                    "paymentmethod": {
+                                        "type": "string",
+                                        "example": "ecocash"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": "5.00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment successful"
+                                        },
+                                        "reference": {
+                                            "type": "string",
+                                            "example": "PN123456789"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Payment failed or service down",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Transaction cancelled"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/{id}": {
+            "get": {
+                "tags": [
+                    "View-review-for-specific-property"
+                ],
+                "summary": "Get reviews for a specific property",
+                "description": "Fetch all reviews for a given property.",
+                "operationId": "6eeda9b36bfd05a475a55a79473890f4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the property to fetch reviews for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved reviews",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "property_id": {
+                                            "type": "integer"
+                                        },
+                                        "reviews": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Review"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Property not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/store": {
+            "post": {
+                "tags": [
+                    "User-write-review"
+                ],
+                "summary": "Store a new review for a property",
+                "description": "Allow users to add a review for a specific property.",
+                "operationId": "405dd3898832581226182c80f4a7ff5d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "comment",
+                                    "review"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer"
+                                    },
+                                    "comment": {
+                                        "type": "string"
+                                    },
+                                    "review": {
+                                        "description": "Rating between 1 and 5",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully added review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "review": {
+                                            "$ref": "#/components/schemas/Review"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid data provided",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/delete/{reviewId}": {
+            "delete": {
+                "tags": [
+                    "Delete-written-review"
+                ],
+                "summary": "Delete a review by review ID (admin or general delete)",
+                "description": "Delete any review by its review ID (admin or moderator functionality).",
+                "operationId": "2682b63a24f1558d54b323820c5b4efe",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "The ID of the review to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Review not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/property/{id}/reviews": {
+            "get": {
+                "tags": [
+                    "View-property-review"
+                ],
+                "summary": "Get all reviews for a specific property",
+                "description": "Fetch all reviews written for a given property by property ID.",
+                "operationId": "3e3ef69d81fbb072009aaeb4ce9612a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the property to fetch reviews for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved list of reviews",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Review"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No reviews found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/home": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Get home data for authenticated user",
+                "description": "Fetch home data for a user, including property listings and payment status.",
+                "operationId": "d65ef76cbb32ae304c5a24c525b95adb",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved home data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "location": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "like": {
+                                                "type": "integer"
+                                            },
+                                            "Fridge": {
+                                                "type": "integer"
+                                            },
+                                            "WaterTank": {
+                                                "type": "stringr"
+                                            },
+                                            "Solar": {
+                                                "type": "string"
+                                            },
+                                            "Roommates": {
+                                                "type": "string"
+                                            },
+                                            "wifi": {
+                                                "type": "string"
+                                            },
+                                            "geo": {
+                                                "type": "string"
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Payment required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "redirect_url": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/homedisplay/{id}": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Display details of a property",
+                "description": "Display detailed information about a specific property, including views.",
+                "operationId": "291b914f7a834a3426c849b0b15988db",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved property details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "location": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "number": {
+                                                "type": "string"
+                                            },
+                                            "titleland": {
+                                                "type": "string"
+                                            },
+                                            "Fridge": {
+                                                "type": "string"
+                                            },
+                                            "Bathroom": {
+                                                "type": "string"
+                                            },
+                                            "Tank": {
+                                                "type": "string"
+                                            },
+                                            "stove": {
+                                                "type": "string"
+                                            },
+                                            "Solar": {
+                                                "type": "string"
+                                            },
+                                            "parking": {
+                                                "type": "string"
+                                            },
+                                            "TotalRooms": {
+                                                "type": "string"
+                                            },
+                                            "Roommates": {
+                                                "type": "string"
+                                            },
+                                            "Boarding": {
+                                                "type": "string"
+                                            },
+                                            "Selling": {
+                                                "type": "string"
+                                            },
+                                            "Gender": {
+                                                "type": "string"
+                                            },
+                                            "wifi": {
+                                                "type": "string"
+                                            },
+                                            "giza": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "number"
+                                            },
+                                            "Geo": {
+                                                "type": "string"
+                                            },
+                                            "University": {
+                                                "type": "string"
+                                            },
+                                            "landlordsex": {
+                                                "type": "string"
+                                            },
+                                            "like": {
+                                                "type": "integer"
+                                            },
+                                            "room": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            },
+                                            "Kitchen": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            },
+                                            "Toilet": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            },
+                                            "out": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            },
+                                            "landlord": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Property not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/home/like": {
+            "post": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Like a property",
+                "description": "Allows the authenticated user to like a property.",
+                "operationId": "4c9291d0dff0e7ac3241ecc321123439",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "properties_id"
+                                ],
+                                "properties": {
+                                    "properties_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully liked property",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Already liked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/home/popular": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Get popular properties",
+                "description": "Fetch the top 5 popular properties based on likes.",
+                "operationId": "50de7383dc66ad108497b5049f388648",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved popular properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "like": {
+                                                "type": "integer"
+                                            },
+                                            "location": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "Solar": {
+                                                "type": "string"
+                                            },
+                                            "Roommates": {
+                                                "type": "string"
+                                            },
+                                            "wifi": {
+                                                "type": "string"
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/home/gethome": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Get popular properties",
+                "description": "Fetch the top 5 popular properties based on likes.",
+                "operationId": "7138ec53d5ad11f9b6017336ae0d5b07",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved popular properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "like": {
+                                                "type": "integer"
+                                            },
+                                            "location": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "Solar": {
+                                                "type": "string"
+                                            },
+                                            "Roommates": {
+                                                "type": "string"
+                                            },
+                                            "wifi": {
+                                                "type": "string"
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/payment/regpayment": {
+            "post": {
+                "tags": [
+                    "RegPayments"
+                ],
+                "description": "Processes a payment through Paynow using mobile money.",
+                "operationId": "d433ff36fff558355b9db22a9063cac2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "paymentmethod",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0771234567"
+                                    },
+                                    "paymentmethod": {
+                                        "type": "string",
+                                        "example": "ecocash"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transaction successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction successful!"
+                                        },
+                                        "reference_number": {
+                                            "type": "string",
+                                            "example": "PN1234567890"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Transaction failed or cancelled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Transaction cancelled"
+                                        },
+                                        "action": {
+                                            "type": "string",
+                                            "example": "Please try again or contact support."
+                                        },
+                                        "redirect_url": {
+                                            "type": "string",
+                                            "example": "http://your-app.com/payment/retry"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Paynow service unavailable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Service is down, please try again later."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile": {
+            "get": {
+                "tags": [
+                    "Upload-user-profile"
+                ],
+                "summary": "Get the authenticated user's profile",
+                "operationId": "bf2ad37ec2de8923e4d7facff06cb065",
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "university": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        },
+                                        "image": {
+                                            "type": "string"
+                                        },
+                                        "phone": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties": {
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Store a new property",
+                "operationId": "70bf627c7a3b7593179b22a21956b41e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "location",
+                                    "discription",
+                                    "number",
+                                    "Fridge",
+                                    "Bathroom",
+                                    "Tank",
+                                    "stove",
+                                    "Solar",
+                                    "parking",
+                                    "TotalRooms",
+                                    "Roommates",
+                                    "Boarding",
+                                    "Selling",
+                                    "wifi",
+                                    "giza",
+                                    "Gender",
+                                    "price",
+                                    "Geo",
+                                    "University",
+                                    "room",
+                                    "Kitchen",
+                                    "Toilet",
+                                    "out",
+                                    "landlord"
+                                ],
+                                "properties": {
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "discription": {
+                                        "type": "string"
+                                    },
+                                    "number": {
+                                        "type": "integer"
+                                    },
+                                    "Fridge": {
+                                        "type": "string"
+                                    },
+                                    "Bathroom": {
+                                        "type": "string"
+                                    },
+                                    "Tank": {
+                                        "type": "string"
+                                    },
+                                    "stove": {
+                                        "type": "string"
+                                    },
+                                    "Solar": {
+                                        "type": "string"
+                                    },
+                                    "parking": {
+                                        "type": "string"
+                                    },
+                                    "TotalRooms": {
+                                        "type": "string"
+                                    },
+                                    "Roommates": {
+                                        "type": "string"
+                                    },
+                                    "Boarding": {
+                                        "type": "string"
+                                    },
+                                    "Selling": {
+                                        "type": "string"
+                                    },
+                                    "titleland": {
+                                        "type": "string"
+                                    },
+                                    "wifi": {
+                                        "type": "string"
+                                    },
+                                    "giza": {
+                                        "type": "string"
+                                    },
+                                    "Gender": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "Geo": {
+                                        "type": "string"
+                                    },
+                                    "University": {
+                                        "type": "string"
+                                    },
+                                    "room": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "Kitchen": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "Toilet": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "out": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "landlord": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Property added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Property added successfully."
+                                        },
+                                        "property": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/myproperties": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get all properties created by the authenticated user",
+                "operationId": "5f199c4c17505a912da2ca24ed24523e",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "location": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "like": {
+                                                "type": "integer"
+                                            },
+                                            "Fridge": {
+                                                "type": "integer"
+                                            },
+                                            "WaterTank": {
+                                                "type": "stringr"
+                                            },
+                                            "Solar": {
+                                                "type": "string"
+                                            },
+                                            "Roommates": {
+                                                "type": "string"
+                                            },
+                                            "wifi": {
+                                                "type": "string"
+                                            },
+                                            "geo": {
+                                                "type": "string"
+                                            },
+                                            "image": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "http://yourdomain.com/storage/properties/room.jpg"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{id}": {
+            "put": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Update an existing property",
+                "operationId": "19a6c5948a5a419de858916d8a4ab7c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "discription": {
+                                        "type": "string"
+                                    },
+                                    "number": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "room": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "Kitchen": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "Toilet": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "out": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Property updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Property updated successfully."
+                                        },
+                                        "property": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/search": {
+            "post": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search for properties",
+                "description": "Search for properties based on a keyword. The search is performed on the 'title' field of properties within the user's university (city).",
+                "operationId": "2b1e0f7fab3082a6aefbc7f624b59ffb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "keyword"
+                                ],
+                                "properties": {
+                                    "keyword": {
+                                        "type": "string",
+                                        "example": "house"
+                                    },
+                                    "min_price": {
+                                        "type": "integer",
+                                        "example": 100000
+                                    },
+                                    "max_price": {
+                                        "type": "integer",
+                                        "example": 500000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Search results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Search results"
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Sunset Villa"
+                                                    },
+                                                    "location": {
+                                                        "type": "string",
+                                                        "example": "Rose Garden, NY"
+                                                    },
+                                                    "price": {
+                                                        "type": "integer",
+                                                        "example": 250000
+                                                    },
+                                                    "like": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    },
+                                                    "Fridge": {
+                                                        "type": "string",
+                                                        "example": "Yes"
+                                                    },
+                                                    "WaterTank": {
+                                                        "type": "string",
+                                                        "example": "Yes"
+                                                    },
+                                                    "Solar": {
+                                                        "type": "string",
+                                                        "example": "Available"
+                                                    },
+                                                    "Roommates": {
+                                                        "type": "string",
+                                                        "example": "2"
+                                                    },
+                                                    "wifi": {
+                                                        "type": "string",
+                                                        "example": "High Speed"
+                                                    },
+                                                    "room_image": {
+                                                        "type": "string",
+                                                        "format": "url",
+                                                        "example": "https://example.com/storage/room.jpg"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "No keyword provided"
+                    },
+                    "404": {
+                        "description": "No properties found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/bylocation": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Get properties for authenticated user's university",
+                "description": "Returns a list of properties filtered by the user's university (city).",
+                "operationId": "getPropertiesByUniversity",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "location": {
+                                                "type": "string",
+                                                "example": "Zills Home"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/my-university": {
+            "get": {
+                "tags": [
+                    "University"
+                ],
+                "summary": "Get the university of the authenticated user",
+                "description": "Fetches the university details for the currently authenticated user. This includes the university's name, latitude, and longitude.",
+                "operationId": "a31e7d73b51ef72f2311d7921bd544b1",
+                "responses": {
+                    "200": {
+                        "description": "University details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Harvard University"
+                                                },
+                                                "latitude": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": "42.373611"
+                                                },
+                                                "longitude": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": "-71.109733"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "University not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/upload": {
+            "post": {
+                "tags": [
+                    "Upload-user-profile"
+                ],
+                "summary": "Update user profile",
+                "description": "Update user's phone number and profile image",
+                "operationId": "b56ec7ecfe9eaa4524204d8346f7c223",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "image",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "image": {
+                                        "description": "Profile image to upload",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "phone": {
+                                        "description": "User phone number",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/update": {
+            "post": {
+                "tags": [
+                    "Upload-user-profile"
+                ],
+                "summary": "Update user profile",
+                "description": "Allows a logged-in user to update their profile information such as name, surname, email, university, phone, password, image, etc.",
+                "operationId": "updateProfile",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "image": {
+                                        "type": "file"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully."
+                                        },
+                                        "properties": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "redirect_url": {
+                                            "type": "string",
+                                            "example": "http://yourdomain.com/home"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Profile updated successfully. Payment required.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully. Payment required."
+                                        },
+                                        "redirect_url": {
+                                            "type": "string",
+                                            "example": "http://yourdomain.com/payment/regpayment"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "title": "User",
+                "description": "User schema",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "surname": {
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "john@example.com"
+                    },
+                    "university": {
+                        "type": "string",
+                        "example": "Rose of Sharon University"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Properties": {
+                "title": "Property-directions",
+                "description": "Property model",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "uid": {
+                        "description": "Agent ID",
+                        "type": "integer"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Review": {
+                "description": "A user review for a property",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "properties_id": {
+                        "type": "integer"
+                    },
+                    "comment": {
+                        "type": "string"
+                    },
+                    "Rating": {
+                        "description": "Rating from 1 to 5",
+                        "type": "integer"
+                    },
+                    "flag": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Use Bearer token to access protected routes",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Payments",
+            "description": "Paynow Mobile Payments for Directions"
+        },
+        {
+            "name": "Properties",
+            "description": "Operations related to properties management"
+        },
+        {
+            "name": "Search",
+            "description": "Property search functionality"
+        },
+        {
+            "name": "University",
+            "description": "University-related operations"
+        },
+        {
+            "name": "Userlogin",
+            "description": "Userlogin"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "User_Reg",
+            "description": "User_Reg"
+        },
+        {
+            "name": "Property-directions",
+            "description": "Property-directions"
+        },
+        {
+            "name": "View-review-for-specific-property",
+            "description": "View-review-for-specific-property"
+        },
+        {
+            "name": "User-write-review",
+            "description": "User-write-review"
+        },
+        {
+            "name": "Delete-written-review",
+            "description": "Delete-written-review"
+        },
+        {
+            "name": "View-property-review",
+            "description": "View-property-review"
+        },
+        {
+            "name": "Home",
+            "description": "Home"
+        },
+        {
+            "name": "RegPayments",
+            "description": "RegPayments"
+        },
+        {
+            "name": "Upload-user-profile",
+            "description": "Upload-user-profile"
+        }
+    ]
+}
