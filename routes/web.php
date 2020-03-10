@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\WebhomeController;
+use App\Http\Controllers\Auth\AdminLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,26 @@ Route::get('/index', function () {
 Route::get('/privacy-policy', [AboutController::class, 'show']);
 
 Route::get('/deletion', [AboutController::class, 'show']);
+
+// Admin Login Routes
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+});
+
+// Admin Dashboard (protected by auth middleware and admin check)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+});
+
+require __DIR__.'/auth.php';

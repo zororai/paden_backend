@@ -64,6 +64,15 @@ class LoginController extends Controller
                 'message' => 'Invalid email or password.',
             ], 401);
         }
+
+        // Check if email is verified
+        if (is_null($user->email_verified_at)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Please verify your email before logging in. Check your email for the verification code.',
+                'requires_verification' => true
+            ], 403);
+        }
     
         // Generate token
         $token = $user->createToken('api-token')->plainTextToken;

@@ -19,7 +19,8 @@ use App\Http\Controllers\Api\Auth\{
     RegisterController,
     PasswordResetController,
     LoginController,
-    SocialAuthController
+    SocialAuthController,
+    EmailVerificationController
 };
 use Laravel\Socialite\Facades\Socialite;
 
@@ -39,6 +40,12 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/useregister', [RegisterController::class, 'register']);
 Route::post('password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [PasswordResetController::class, 'reset']);
+
+// ✅ Email Verification Routes (require authentication)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/email/verify', [EmailVerificationController::class, 'verify']);
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend']);
+});
 
 // ✅ Social Login (Google)
 Route::get('/auth/google/redirect', function () {

@@ -7,6 +7,12 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
+ * @OA\Info(
+ *     title="Paden API Documentation",
+ *     version="1.0.0",
+ *     description="API documentation for Paden application"
+ * )
+ *
  * @OA\SecurityScheme(
  *     type="http",
  *     description="Use Bearer token to access protected routes",
