@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Auth;
  *     name="Userupdateprofilepic",
  *     description="User-related operations"
  * )
- *
- * @OA\Info(
- *     title="Your API Title",
- *     version="1.0.0"
- * )
  */
 class UpdateUserController extends Controller
 {
