@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Payment
     //Route::post('/pay/regpay', [PaymentController::class, 'storepay']);
     Route::post('/directions/pay/{id}', [DirectionPaymentController::class, 'pay']);
+    Route::get('/directions/payment/check/{id}', [DirectionPaymentController::class, 'checkPayment']);
   
 
     // Properties

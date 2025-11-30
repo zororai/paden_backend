@@ -124,4 +124,62 @@ class DirectionPaymentController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/directions/payment/check/{id}",
+     *     tags={"Payments"},
+     *     summary="Check if a payment with the given ID exists",
+     *     security={{
+     *         "bearerAuth": {}
+     *     }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Payment/Direction ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="exists", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Payment found"),
+     *             @OA\Property(property="payment", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="user_id", type="integer", example=1),
+     *                 @OA\Property(property="properties_id", type="integer", example=5),
+     *                 @OA\Property(property="amount", type="number", format="float", example="5.00"),
+     *                 @OA\Property(property="reference_number", type="string", example="PN123456789")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Payment not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="exists", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Payment not found")
+     *         )
+     *     )
+     * )
+     */
+    public function checkPayment($id)
+    {
+        $payment = Directions::find($id);
+
+        if ($payment) {
+            return response()->json([
+                'exists' => true,
+                'message' => 'Payment found',
+                'payment' => $payment
+            ], 200);
+        }
+
+        return response()->json([
+            'exists' => false,
+            'message' => 'Payment not found'
+        ], 404);
+    }
 }
