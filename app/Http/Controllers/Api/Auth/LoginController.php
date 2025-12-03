@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Api\HomeController;
 use App\Models\User;
+use App\Models\EmailVerificationCode;
+use App\Notifications\EmailVerificationNotification;
 /**
  * @OA\Post(
  *     path="/api/login",
@@ -55,9 +57,9 @@ class LoginController extends Controller
             'email'    => 'required|email',
             'password' => 'required|string|min:6',
         ]);
-    
+
         $user = User::where('email', $request->email)->first();
-    
+
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => false,
@@ -67,19 +69,28 @@ class LoginController extends Controller
 
         // Check if email is verified
         if (is_null($user->email_verified_at)) {
+            // Generate and send verification code
+            $verificationCode = EmailVerificationCode::createForEmail($user->email);
+            $user->notify(new EmailVerificationNotification($verificationCode->code));
+
+            // Generate token for the user to use with verification endpoints
+            $token = $user->createToken('api-token')->plainTextToken;
+
             return response()->json([
                 'status' => false,
-                'message' => 'Please verify your email before logging in. Check your email for the verification code.',
-                'requires_verification' => true
+                'message' => 'Your email is not verified. A verification code has been sent to your email address.',
+                'requires_verification' => true,
+                'token' => $token,
+                'email' => $user->email
             ], 403);
         }
-    
+
         // Generate token
         $token = $user->createToken('api-token')->plainTextToken;
-    
+
         // Optional: Log in user for session-based access (useful if not using token for everything)
         Auth::login($user);
-    
+
         // Create the response data
         $data = [
             'message' => 'Login successful',
@@ -88,14 +99,14 @@ class LoginController extends Controller
                 'name'  => $user->name,
                 'email' => $user->email,
                 'image' => asset('storage/' . $user->image),
-                'role'  => $user->role, 
+                'role'  => $user->role,
             ],
 
             'token' => $token,
         ];
-    
+
         return response()->json($data);
     }
-    
-    
+
+
 }

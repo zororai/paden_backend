@@ -71,7 +71,7 @@ class RegisterController extends Controller
             'name'       => 'required|string|max:255',
             'surname'    => 'required|string|max:255',
             'email'      => 'required|string|email|max:255|unique:users',
-            'university' => 'required|string|max:255', 
+            'university' => 'required|string|max:255',
             'password'   => 'required|string|min:6|confirmed',
             'role'       => 'required|string|max:255',
         ],[
@@ -98,18 +98,13 @@ class RegisterController extends Controller
             'role'       => $request->role,
         ]);
 
-        // Generate and send verification code
-        $verificationCode = EmailVerificationCode::createForEmail($user->email);
-        $user->notify(new EmailVerificationNotification($verificationCode->code));
-
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
             'status' => true,
-            'message' => 'User registered successfully. Please check your email for the verification code.',
+            'message' => 'User registered successfully.',
             'token' => $token,
-            'user' => $user,
-            'requires_verification' => true
+            'user' => $user
         ], 201);
     }
 }
