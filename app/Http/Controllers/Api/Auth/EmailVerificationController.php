@@ -17,36 +17,35 @@ use Illuminate\Support\Facades\Validator;
  */
 class EmailVerificationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
     /**
      * @OA\Post(
      *     path="/api/email/verify",
      *     tags={"Email_Verification"},
      *     summary="Verify email with code",
-     *     description="Verify user's email address using the 6-digit code sent to their email",
-     *     security={{"sanctum":{}}},
+     *     description="Verify user's email using the 6-digit verification code",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *             required={"code"},
-     *             @OA\Property(property="code", type="string", example="123456", description="6-digit verification code")
+     *             @OA\Property(property="code", type="string", example="123456")
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Email verified successfully",
+     *         description="Email verified",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Email verified successfully.")
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid or expired code",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Invalid or expired verification code.")
-     *         )
-     *     ),
+     *     @OA\Response(response=400, description="Invalid or expired code"),
+     *     @OA\Response(response=422, description="Validation error"),
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
@@ -63,10 +62,8 @@ class EmailVerificationController extends Controller
             ], 422);
         }
 
-        // Get authenticated user
-        $user = $request->user();
+        $user = auth()->user();
 
-        // Check if already verified
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'status' => false,
@@ -74,7 +71,6 @@ class EmailVerificationController extends Controller
             ], 400);
         }
 
-        // Verify the code
         if (EmailVerificationCode::verify($user->email, $request->code)) {
             $user->markEmailAsVerified();
 
@@ -95,33 +91,24 @@ class EmailVerificationController extends Controller
      *     path="/api/email/resend",
      *     tags={"Email_Verification"},
      *     summary="Resend verification code",
-     *     description="Resend a new verification code to the user's email",
-     *     security={{"sanctum":{}}},
+     *     description="Resend a new code to the user's email",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Verification code sent",
+     *         description="Code sent",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Verification code sent to your email.")
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Email already verified",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="boolean", example=false),
-     *             @OA\Property(property="message", type="string", example="Email is already verified.")
-     *         )
-     *     ),
+     *     @OA\Response(response=400, description="Email already verified"),
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
     public function resend(Request $request)
     {
-        // Get authenticated user
-        $user = $request->user();
+        $user = auth()->user();
 
-        // Check if already verified
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'status' => false,
@@ -129,8 +116,8 @@ class EmailVerificationController extends Controller
             ], 400);
         }
 
-        // Generate and send new verification code
         $verificationCode = EmailVerificationCode::createForEmail($user->email);
+
         $user->notify(new EmailVerificationNotification($verificationCode->code));
 
         return response()->json([

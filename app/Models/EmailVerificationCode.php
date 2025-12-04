@@ -36,11 +36,11 @@ class EmailVerificationCode extends Model
         // Delete any existing codes for this email
         self::where('email', $email)->delete();
 
-        // Create new code that expires in 1 minute
+        // Create new code that expires in 3 minutes
         return self::create([
             'email' => $email,
             'code' => self::generateCode(),
-            'expires_at' => Carbon::now()->addMinutes(1),
+            'expires_at' => Carbon::now()->addMinutes(3),
         ]);
     }
 

@@ -12,7 +12,7 @@
                     "Email_Verification"
                 ],
                 "summary": "Verify email with code",
-                "description": "Verify user's email address using the 6-digit code sent to their email",
+                "description": "Verify user's email using the 6-digit verification code",
                 "operationId": "a853ab91c84859a2eae73be2b7e5a1d4",
                 "requestBody": {
                     "required": true,
@@ -24,7 +24,6 @@
                                 ],
                                 "properties": {
                                     "code": {
-                                        "description": "6-digit verification code",
                                         "type": "string",
                                         "example": "123456"
                                     }
@@ -36,7 +35,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Email verified successfully",
+                        "description": "Email verified",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -56,24 +55,10 @@
                         }
                     },
                     "400": {
-                        "description": "Invalid or expired code",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Invalid or expired verification code."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Invalid or expired code"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -81,7 +66,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -92,11 +77,11 @@
                     "Email_Verification"
                 ],
                 "summary": "Resend verification code",
-                "description": "Resend a new verification code to the user's email",
+                "description": "Resend a new code to the user's email",
                 "operationId": "ca7ecc51fc597d15270c61a8fd618de2",
                 "responses": {
                     "200": {
-                        "description": "Verification code sent",
+                        "description": "Code sent",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -116,24 +101,7 @@
                         }
                     },
                     "400": {
-                        "description": "Email already verified",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Email is already verified."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Email already verified"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -141,7 +109,7 @@
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             }

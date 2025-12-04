@@ -39,10 +39,11 @@ class EmailVerificationNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Verify Your Email Address')
             ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('Thank you for registering. Please use the verification code below to verify your email address:')
-            ->line('**Verification Code: ' . $this->code . '**')
-            ->line('This code will expire in 1 minute.')
-            ->line('If you did not create an account, no further action is required.');
+            ->line('Thank you for registering with Paden. To complete your registration, please verify your email address.')
+            ->line('**Your Verification Code: ' . $this->code . '**')
+            ->line('Please enter this code in the verification screen.')
+            ->line('This code will expire in 3 minutes.')
+            ->line('If you did not create an account, please ignore this email.');
     }
 
     /**
