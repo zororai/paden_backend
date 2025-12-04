@@ -73,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Route::post('/pay/regpay', [PaymentController::class, 'storepay']);
     Route::post('/directions/pay/{id}', [DirectionPaymentController::class, 'pay']);
     Route::get('/directions/payment/check/{id}', [DirectionPaymentController::class, 'checkPayment']);
-  
+
 
     // Properties
     Route::post('/properties', [PropertyController::class, 'store']);
@@ -82,10 +82,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/properties/update-landlord-agent/{id}/', [PropertyController::class, 'updateLandlordAgent']);
     Route::get('/home/popular', [HomeController::class, 'getPopularPropertyIds']);
         Route::get('home/gethome', [HomeController::class, 'gethome']);
-   
+
 
     Route::get('reviews/{id}', [DisplayReviewController::class, 'index'])->name('reviews.index');
-   
+
     Route::delete('reviews/delete/{reviewId}', [DisplayReviewController::class, 'deleteReviewById'])->name('reviews.delete.id');
     Route::post('reviews/store', [DisplayReviewController::class, 'storeReviews'])->name('reviews.store');
     Route::get('property/{id}/reviews', [DisplayReviewController::class, 'getReviewsForProperty'])->name('property.reviews');
@@ -97,14 +97,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/home/like', [HomeController::class, 'like']);
 
     Route::get('/properties/directions/{id}', [DirectionController::class, 'show']);
-    
+
 
     // ✅ Public Routes
- 
+
 
 
     Route::get('/profile', [ProfileController::class, 'showProfile']);
-    Route::get('/properties/bylocation', [SearchController::class, 'getPropertiesByUniversity']);   
+    Route::get('/properties/bylocation', [SearchController::class, 'getPropertiesByUniversity']);
     Route::post('/search', [SearchController::class, 'search']);
 
 });

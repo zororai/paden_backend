@@ -63,6 +63,7 @@ class EmailVerificationController extends Controller
             ], 422);
         }
 
+        // Get authenticated user
         $user = $request->user();
 
         // Check if already verified
@@ -117,6 +118,7 @@ class EmailVerificationController extends Controller
      */
     public function resend(Request $request)
     {
+        // Get authenticated user
         $user = $request->user();
 
         // Check if already verified
