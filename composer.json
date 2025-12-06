@@ -6,6 +6,11 @@
         "laravel",
         "framework"
     ],
+    "audit": {
+    "ignore": [
+        "PKSA-rqc2-tcc6-nc79"
+    ]
+},
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -16,6 +21,7 @@
         "laravel/socialite": "^5.19",
         "laravel/tinker": "^2.8",
         "paynow/php-sdk": "^1.0",
+        "pusher/pusher-php-server": "*",
         "zircote/swagger-php": "^4.11"
     },
     "require-dev": {
@@ -60,6 +66,7 @@
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
         ]
     },
+
     "extra": {
         "laravel": {
             "dont-discover": []
@@ -74,6 +81,7 @@
             "php-http/discovery": true
         }
     },
+
     "minimum-stability": "stable",
     "prefer-stable": true
 }
