@@ -12,8 +12,8 @@ use App\Http\Controllers\Api\{
     ProfileController,
     DisplayReviewController,
     DirectionPaymentController,
-    DirectionController
-
+    DirectionController,
+    ChatController
 };
 use App\Http\Controllers\Api\Auth\{
     RegisterController,
@@ -106,6 +106,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'showProfile']);
     Route::get('/properties/bylocation', [SearchController::class, 'getPropertiesByUniversity']);
     Route::post('/search', [SearchController::class, 'search']);
+
+    // ✅ Chat Routes
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+    Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
+    Route::get('/chat/conversations', [ChatController::class, 'getConversations']);
+    Route::post('/chat/mark-read/{userId}', [ChatController::class, 'markAsRead']);
 
 });
 
