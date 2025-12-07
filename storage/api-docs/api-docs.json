@@ -1359,6 +1359,9 @@
                                             "giza": {
                                                 "type": "string"
                                             },
+                                            "uid": {
+                                                "type": "integer"
+                                            },
                                             "price": {
                                                 "type": "number"
                                             },
@@ -1776,6 +1779,83 @@
                     },
                     "404": {
                         "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/{id}": {
+            "get": {
+                "tags": [
+                    "Upload-user-profile"
+                ],
+                "summary": "Get user profile by ID",
+                "operationId": "b4b5d51b8342fe086f23aa7dca3397ca",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "surname": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "university": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "format": "url"
+                                        },
+                                        "phone": {
+                                            "type": "string"
+                                        },
+                                        "role": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -2270,6 +2350,102 @@
                 ]
             }
         },
+        "/api/sms/send/{userId}": {
+            "post": {
+                "tags": [
+                    "SMS"
+                ],
+                "summary": "Send SMS to a user",
+                "description": "Send house inquiry SMS to a user's phone number",
+                "operationId": "6349211c94c3fafda544afb97c115e7c",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "User ID (property owner)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "propertyAddress"
+                                ],
+                                "properties": {
+                                    "propertyAddress": {
+                                        "type": "string",
+                                        "example": "123 Main Street, Harare"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "SMS sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SMS sent successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "destination": {
+                                                    "type": "string"
+                                                },
+                                                "messageText": {
+                                                    "type": "string"
+                                                },
+                                                "response": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "400": {
+                        "description": "User has no phone number"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "SMS API error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/my-university": {
             "get": {
                 "tags": [
@@ -2615,6 +2791,10 @@
         {
             "name": "Search",
             "description": "Property search functionality"
+        },
+        {
+            "name": "SMS",
+            "description": "SMS notification endpoints"
         },
         {
             "name": "University",
