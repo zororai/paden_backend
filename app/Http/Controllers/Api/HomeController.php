@@ -48,7 +48,7 @@ class HomeController extends Controller
      *                 @OA\Property(property="geo", type="string"),
      *                   @OA\Property(property="image", type="string", format="url", example="http://yourdomain.com/storage/properties/room.jpg")
      *
-     * 
+     *
      *             )
      *         )
      *     ),
@@ -118,15 +118,15 @@ public function index()
         ];
     });
 
-    return response()->json($properties, 200); 
+    return response()->json($properties, 200);
 
-    
- 
+
+
 }
 
 
 
-    
+
     /**
      * @OA\Get(
      *     path="/api/homedisplay/{id}",
@@ -168,6 +168,7 @@ public function index()
 *                 @OA\Property(property="Gender", type="string"),
 *                 @OA\Property(property="wifi", type="string"),
 *                 @OA\Property(property="giza", type="string"),
+                  @OA\Property(property="uid", type="integer"),
 *                 @OA\Property(property="price", type="number"),
 *                 @OA\Property(property="Geo", type="string"),
 *                 @OA\Property(property="University", type="string"),
@@ -178,7 +179,7 @@ public function index()
 *                 @OA\Property(property="Toilet", type="string", format="url",example="http://yourdomain.com/storage/properties/room.jpg"),
 *                 @OA\Property(property="out", type="string", format="url",example="http://yourdomain.com/storage/properties/room.jpg"),
 *                 @OA\Property(property="landlord", type="string", format="url" ,example="http://yourdomain.com/storage/properties/room.jpg")
-*   
+*
 *             )
 *         )
 *     ),
@@ -192,9 +193,9 @@ public function index()
      *     )
      * )
      */
-     
+
     public function displa($id)
-    
+
     {
         $property = Properties::find($id);
 
@@ -204,7 +205,7 @@ public function index()
                 'message' => 'Property not found',
             ], 404);
         }
-    
+
     $formattedProperty = [
         'id' => $property->id,
         'name' => $property->name,
@@ -227,6 +228,7 @@ public function index()
         'giza' => $property->groundmapimage,
         'price' => $property->price,
         'Geo' => $property->location,
+        'uid' => $property->uid,
         'University' => $property->city,
         'landlordsex' => $property->state,
         'room' => asset('storage/' . $property->pimage),         // Room image
@@ -234,11 +236,11 @@ public function index()
         'Toilet' => asset('storage/' . $property->pimage2),      // Toilet image
         'out' => asset('storage/' . $property->pimage3),         // Outside image
         'landlord' => asset('storage/' . $property->pimage4)    // Landlord image
-  
 
- 
+
+
     ];
-    
+
         return response()->json([
             'success' => true,
             'data' => $formattedProperty,
@@ -284,9 +286,9 @@ public function index()
         $request->validate([
             'properties_id' => 'required|integer|exists:properties,id',
         ]);
-    
+
         $properties_id = $request->input('properties_id');
-        
+
         if (Like::where('user_id', Auth::id())->where('properties_id', $properties_id)->exists()) {
             return response()->json(['message' => 'Already liked'], 400);
         } else {
@@ -368,7 +370,7 @@ public function getPopularPropertyIds()
 
     return response()->json($response, 200);
 }
- 
+
 /**
  * @OA\Get(
  *     path="/api/home/gethome",
