@@ -108,7 +108,7 @@ class SmsController extends Controller
         }
 
         // Create predefined message
-        $messageText = "{$authUser->name} is looking for a student accommodation. Is the house at {$request->propertyAddress} still available?";
+        $messageText = "{$authUser->name} is looking for a student accommodation. Is the house at {$request->propertyAddress} still available?, please contact them back on Paden application.";
 
         // Create Basic Auth header
         $basicAuth = base64_encode($username . ':' . $password);
