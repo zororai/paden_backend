@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\WebhomeController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,13 +46,8 @@ Route::middleware('auth')->group(function () {
 
 // Admin Dashboard (protected by auth middleware and admin check)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        // Check if user is admin
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Unauthorized access');
-        }
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 });
 
 require __DIR__.'/auth.php';
