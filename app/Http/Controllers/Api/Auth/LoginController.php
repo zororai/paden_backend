@@ -67,8 +67,8 @@ class LoginController extends Controller
             ], 401);
         }
 
-        // Check if email is verified
-        if (is_null($user->email_verified_at)) {
+        // Check if email is verified (bypass for admin users)
+        if (is_null($user->email_verified_at) && $user->role !== 'admin') {
             // Generate and send verification code
             $verificationCode = EmailVerificationCode::createForEmail($user->email);
             $user->notify(new EmailVerificationNotification($verificationCode->code));
