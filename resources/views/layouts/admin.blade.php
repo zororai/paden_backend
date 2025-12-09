@@ -236,6 +236,56 @@
             background: #dc2626;
         }
 
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            display: none;
+            padding-left: 35px;
+            margin-top: 5px;
+        }
+
+        .dropdown.open .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: #6b7280;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: #f9fafb;
+            color: #111827;
+        }
+
+        .dropdown-toggle::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+
+        .dropdown.open .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 200px;
@@ -265,6 +315,19 @@
                 <a href="{{ route('admin.students') }}" class="nav-item {{ request()->routeIs('admin.students') ? 'active' : '' }}">
                     <span>🎓</span> Students
                 </a>
+                <div class="dropdown">
+                    <div class="nav-item dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span>💰 Payments</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('admin.regPayments') }}" class="dropdown-item {{ request()->routeIs('admin.regPayments') ? 'active' : '' }}">
+                            <span>📝</span> Reg Payment
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span>🧭</span> Direction Payment
+                        </a>
+                    </div>
+                </div>
                 <a href="#" class="nav-item">
                     <span>📅</span> Calendar
                 </a>
@@ -297,5 +360,19 @@
     <main class="main-content">
         @yield('content')
     </main>
+
+    <script>
+        function toggleDropdown(element) {
+            const dropdown = element.parentElement;
+            dropdown.classList.toggle('open');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+            }
+        });
+    </script>
 </body>
 </html>

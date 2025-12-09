@@ -20,64 +20,139 @@
 </div>
 
 <div class="stats-grid">
-    <div class="stat-card green">
-        <div class="stat-title">Total Projects</div>
-        <div class="stat-value">{{ \App\Models\Properties::count() }}</div>
-        <div class="stat-subtitle">📈 15% increase from last month</div>
-        <div class="stat-icon" style="background: rgba(255,255,255,0.2);">📊</div>
-    </div>
-
     <div class="stat-card">
         <div class="stat-title">Total Users</div>
         <div class="stat-value">{{ \App\Models\User::count() }}</div>
-        <div class="stat-subtitle">📈 20% increase from last month</div>
+        <div class="stat-subtitle">All registered users</div>
         <div class="stat-icon">👥</div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-title">Admin Users</div>
-        <div class="stat-value">{{ \App\Models\User::where('role', 'admin')->count() }}</div>
-        <div class="stat-subtitle">Of total users</div>
-        <div class="stat-icon">👤</div>
+    <div class="stat-card green">
+        <div class="stat-title">Verified Students</div>
+        <div class="stat-value">{{ \App\Models\User::where('type', 'student')->whereNotNull('email_verified_at')->count() }}</div>
+        <div class="stat-subtitle">Out of {{ \App\Models\User::where('type', 'student')->count() }} students</div>
+        <div class="stat-icon" style="background: rgba(255,255,255,0.2);">🎓</div>
     </div>
 
     <div class="stat-card">
-        <div class="stat-title">Verified Users</div>
-        <div class="stat-value">{{ \App\Models\User::whereNotNull('email_verified_at')->count() }}</div>
-        <div class="stat-subtitle">Email verified</div>
-        <div class="stat-icon">✅</div>
+        <div class="stat-title">Verified Landlords</div>
+        <div class="stat-value">{{ \App\Models\User::whereIn('type', ['landlord', 'agent'])->whereNotNull('email_verified_at')->count() }}</div>
+        <div class="stat-subtitle">Out of {{ \App\Models\User::whereIn('type', ['landlord', 'agent'])->count() }} landlords</div>
+        <div class="stat-icon">🏠</div>
     </div>
 </div>
 
-<div class="content-grid">
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title">Recent Activities</div>
-        </div>
-        <div style="color: #6b7280; text-align: center; padding: 40px 0;">
-            📊 Activity chart would go here
+<div class="card" style="margin-top: 30px;">
+    <div class="card-header">
+        <div class="card-title">Verified User Registration Growth</div>
+        <div style="display: flex; gap: 10px;">
+            <button class="period-btn active" data-period="daily">Daily</button>
+            <button class="period-btn" data-period="weekly">Weekly</button>
+            <button class="period-btn" data-period="monthly">Monthly</button>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title">Team Collaboration</div>
-            <button class="btn btn-secondary" style="padding: 5px 15px; font-size: 13px;">+ Add Member</button>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            @foreach(\App\Models\User::where('role', 'admin')->limit(4)->get() as $admin)
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="user-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
-                    <div>
-                        <div style="font-weight: 500; font-size: 14px;">{{ $admin->name }}</div>
-                        <div style="font-size: 12px; color: #9ca3af;">{{ $admin->email }}</div>
-                    </div>
-                </div>
-                <span style="font-size: 12px; color: #10b981; background: #d1fae5; padding: 4px 10px; border-radius: 12px;">Active</span>
-            </div>
-            @endforeach
-        </div>
+    <div style="padding: 20px;">
+        <canvas id="userChart" style="max-height: 400px;"></canvas>
     </div>
 </div>
+
+<style>
+    .period-btn {
+        padding: 8px 16px;
+        border: 1px solid #e5e7eb;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    .period-btn:hover {
+        background: #f9fafb;
+    }
+
+    .period-btn.active {
+        background: #10b981;
+        color: white;
+        border-color: #10b981;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let chart = null;
+
+    function loadChartData(period) {
+        fetch('/admin/chart-data?period=' + period)
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.label);
+                const studentsData = data.map(item => item.students);
+                const landlordsData = data.map(item => item.landlords);
+
+                if (chart) {
+                    chart.destroy();
+                }
+
+                const ctx = document.getElementById('userChart').getContext('2d');
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Students',
+                                data: studentsData,
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: 'Landlords',
+                                data: landlordsData,
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                            title: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+
+    // Load initial data
+    loadChartData('daily');
+
+    // Period button handlers
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            loadChartData(this.dataset.period);
+        });
+    });
+</script>
 @endsection

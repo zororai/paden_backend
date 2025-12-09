@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/landlords', [AdminDashboardController::class, 'landlords'])->name('admin.landlords');
     Route::get('/admin/students', [AdminDashboardController::class, 'students'])->name('admin.students');
+    Route::get('/admin/chart-data', [AdminDashboardController::class, 'getChartData'])->name('admin.chartData');
+    Route::get('/admin/reg-payments', [AdminDashboardController::class, 'regPayments'])->name('admin.regPayments');
 });
 
 require __DIR__.'/auth.php';
