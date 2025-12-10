@@ -306,7 +306,13 @@
         <nav>
             <div class="nav-section">
                 <div class="nav-title">Menu</div>
-                @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('dashboard'))
+
+                @php
+                    $currentUser = auth()->user();
+                    $userPermissions = $currentUser->permissions ?? [];
+                @endphp
+
+                @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard'))
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('dashboard') || request()->routeIs('admin.regPaymentAnalytics') || request()->routeIs('admin.directionPaymentAnalytics') || request()->routeIs('admin.universityAnalytics') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>📊 Dashboard</span>
@@ -327,7 +333,7 @@
                     </div>
                 </div>
                 @endif
-                @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('users'))
+                @if($currentUser->role === 'admin' || $currentUser->hasPermission('users'))
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.users') || request()->routeIs('admin.landlords') || request()->routeIs('admin.students') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>👥 Users</span>
@@ -345,23 +351,23 @@
                     </div>
                 </div>
                 @endif
-                @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('properties') || auth()->user()->hasPermission('universities') || auth()->user()->hasPermission('reviews'))
+                @if($currentUser->role === 'admin' || $currentUser->hasPermission('properties') || $currentUser->hasPermission('universities') || $currentUser->hasPermission('reviews'))
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.properties') || request()->routeIs('admin.universities') || request()->routeIs('admin.reviews') || request()->routeIs('admin.likes') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>🏘️ Properties</span>
                     </div>
                     <div class="dropdown-menu">
-                        @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('properties'))
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('properties'))
                         <a href="{{ route('admin.properties') }}" class="dropdown-item {{ request()->routeIs('admin.properties') ? 'active' : '' }}">
                             <span>🏠</span> Properties
                         </a>
                         @endif
-                        @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('universities'))
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('universities'))
                         <a href="{{ route('admin.universities') }}" class="dropdown-item {{ request()->routeIs('admin.universities') ? 'active' : '' }}">
                             <span>🏫</span> University
                         </a>
                         @endif
-                        @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('reviews'))
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('reviews'))
                         <div style="padding: 8px 20px; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px;">Property Valuation</div>
                         <a href="{{ route('admin.reviews') }}" class="dropdown-item {{ request()->routeIs('admin.reviews') ? 'active' : '' }}">
                             <span>⭐</span> Reviews
@@ -373,7 +379,7 @@
                     </div>
                 </div>
                 @endif
-                @if(auth()->user()->role === 'admin' || auth()->user()->hasPermission('payments'))
+                @if($currentUser->role === 'admin' || $currentUser->hasPermission('payments'))
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.regPayments') || request()->routeIs('admin.directionPayments') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>💰 Payments</span>
