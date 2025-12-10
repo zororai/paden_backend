@@ -312,4 +312,26 @@ class AdminDashboardController extends Controller
         $universities = \App\Models\University::orderBy('university', 'asc')->get();
         return view('admin.universities', compact('universities'));
     }
+
+    public function storeUniversity(Request $request)
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $request->validate([
+            'university' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        \App\Models\University::create([
+            'university' => $request->university,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+
+        return redirect()->route('admin.universities')->with('success', 'University added successfully!');
+    }
 }
