@@ -325,9 +325,19 @@
                 <a href="{{ route('admin.students') }}" class="nav-item {{ request()->routeIs('admin.students') ? 'active' : '' }}">
                     <span>🎓</span> Students
                 </a>
-                <a href="{{ route('admin.properties') }}" class="nav-item {{ request()->routeIs('admin.properties') ? 'active' : '' }}">
-                    <span>🏘️</span> Properties
-                </a>
+                <div class="dropdown">
+                    <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.properties') || request()->routeIs('admin.universities') ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                        <span>🏘️ Properties</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('admin.properties') }}" class="dropdown-item {{ request()->routeIs('admin.properties') ? 'active' : '' }}">
+                            <span>🏠</span> Properties
+                        </a>
+                        <a href="{{ route('admin.universities') }}" class="dropdown-item {{ request()->routeIs('admin.universities') ? 'active' : '' }}">
+                            <span>🏫</span> University
+                        </a>
+                    </div>
+                </div>
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.regPayments') || request()->routeIs('admin.directionPayments') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>💰 Payments</span>

@@ -301,4 +301,15 @@ class AdminDashboardController extends Controller
         $properties = \App\Models\Properties::orderBy('created_at', 'desc')->get();
         return view('admin.properties', compact('properties'));
     }
+
+    public function universities()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $universities = \App\Models\University::orderBy('university', 'asc')->get();
+        return view('admin.universities', compact('universities'));
+    }
 }
