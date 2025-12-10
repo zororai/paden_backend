@@ -28,8 +28,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'google_id',
         'role',
+        'admin_access',
+        'permissions',
     ];
-    
+
   //public function likes()
   //{
    //return $this->belongsToMany(Like::class,'like')->withTimestamps();
@@ -58,5 +60,22 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'permissions' => 'array',
     ];
+
+    /**
+     * Check if user has a specific permission
+     */
+    public function hasPermission($permission)
+    {
+        if ($this->role === 'admin') {
+            return true; // Admin has all permissions
+        }
+
+        if (!$this->admin_access) {
+            return false; // No admin access
+        }
+
+        return in_array($permission, $this->permissions ?? []);
+    }
 }

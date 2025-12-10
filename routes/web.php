@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/likes', [AdminDashboardController::class, 'likes'])->name('admin.likes');
     Route::get('/admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
     Route::post('/admin/users', [AdminDashboardController::class, 'storeUser'])->name('admin.users.store');
+    Route::post('/admin/users/{user}/toggle-access', [AdminDashboardController::class, 'toggleAdminAccess'])->name('admin.users.toggleAccess');
+    Route::post('/admin/users/{user}/permissions', [AdminDashboardController::class, 'updatePermissions'])->name('admin.users.updatePermissions');
 });
 
 require __DIR__.'/auth.php';

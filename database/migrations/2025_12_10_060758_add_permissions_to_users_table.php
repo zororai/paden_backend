@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('admin_access')->default(false)->after('role');
+            $table->json('permissions')->nullable()->after('admin_access');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('admin_access');
+            $table->dropColumn('permissions');
         });
     }
 };

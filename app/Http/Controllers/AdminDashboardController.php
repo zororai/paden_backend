@@ -10,15 +10,16 @@ class AdminDashboardController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'admin' && !auth()->user()->admin_access) {
+                abort(403, 'Unauthorized access. You need admin access permission.');
+            }
+            return $next($request);
+        });
     }
 
     public function index()
     {
-        // Check if user is admin
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Unauthorized access');
-        }
-
         return view('admin.dashboard');
     }
 
@@ -412,6 +413,8 @@ class AdminDashboardController extends Controller
             'password' => 'required|string|min:8',
             'type' => 'required|in:student,landlord,agent',
             'phone' => 'nullable|string|max:20',
+            'admin_access' => 'nullable|boolean',
+            'permissions' => 'nullable|array',
         ]);
 
         $user = User::create([
@@ -423,8 +426,55 @@ class AdminDashboardController extends Controller
             'phone' => $request->phone,
             'role' => 'user',
             'email_verified_at' => now(), // Auto-verify admin-created users
+            'admin_access' => $request->has('admin_access') ? true : false,
+            'permissions' => $request->permissions ?? [],
         ]);
 
         return redirect()->route('admin.users')->with('success', 'User created successfully!');
+    }
+
+    public function toggleAdminAccess(Request $request, $userId)
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $user = User::findOrFail($userId);
+
+        // Don't allow toggling admin role users
+        if ($user->role === 'admin') {
+            return redirect()->back()->with('error', 'Cannot modify admin users');
+        }
+
+        $user->admin_access = !$user->admin_access;
+        $user->save();
+
+        $message = $user->admin_access ? 'Admin access granted!' : 'Admin access revoked!';
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function updatePermissions(Request $request, $userId)
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $user = User::findOrFail($userId);
+
+        // Don't allow modifying admin role users
+        if ($user->role === 'admin') {
+            return redirect()->back()->with('error', 'Cannot modify admin users');
+        }
+
+        $request->validate([
+            'permissions' => 'nullable|array',
+        ]);
+
+        $user->permissions = $request->permissions ?? [];
+        $user->save();
+
+        return redirect()->back()->with('success', 'Permissions updated successfully!');
     }
 }

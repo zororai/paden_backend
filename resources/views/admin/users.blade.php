@@ -17,6 +17,12 @@
 </div>
 @endif
 
+@if(session('error'))
+<div style="background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    {{ session('error') }}
+</div>
+@endif
+
 <!-- Add User Form -->
 <div id="addUserForm" style="display: none; margin-bottom: 20px;">
     <div class="card">
@@ -81,6 +87,46 @@
                 </div>
             </div>
 
+            <div style="margin-bottom: 20px; padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px; background: #f9fafb;">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" name="admin_access" value="1" style="width: 18px; height: 18px; cursor: pointer;" {{ old('admin_access') ? 'checked' : '' }}>
+                        <span style="font-weight: 600; color: #374151;">Grant Admin Panel Access</span>
+                    </label>
+                    <p style="margin: 8px 0 0 28px; font-size: 13px; color: #6b7280;">Allow this user to access the admin dashboard</p>
+                </div>
+
+                <div style="border-top: 1px solid #e5e7eb; padding-top: 15px; margin-top: 15px;">
+                    <div style="font-weight: 600; color: #374151; margin-bottom: 12px;">Select Permissions:</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; background: white;">
+                            <input type="checkbox" name="permissions[]" value="dashboard" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('dashboard', old('permissions', [])) ? 'checked' : '' }}>
+                            <span style="font-size: 14px; color: #374151;">📊 Dashboard & Analytics</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; background: white;">
+                            <input type="checkbox" name="permissions[]" value="users" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('users', old('permissions', [])) ? 'checked' : '' }}>
+                            <span style="font-size: 14px; color: #374151;">👥 User Management</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; background: white;">
+                            <input type="checkbox" name="permissions[]" value="properties" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('properties', old('permissions', [])) ? 'checked' : '' }}>
+                            <span style="font-size: 14px; color: #374151;">🏘️ Properties</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; background: white;">
+                            <input type="checkbox" name="permissions[]" value="universities" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('universities', old('permissions', [])) ? 'checked' : '' }}>
+                            <span style="font-size: 14px; color: #374151;">🏫 Universities</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; background: white;">
+                            <input type="checkbox" name="permissions[]" value="reviews" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('reviews', old('permissions', [])) ? 'checked' : '' }}>
+                            <span style="font-size: 14px; color: #374151;">⭐ Reviews & Likes</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px; border-radius: 6px; background: white;">
+                            <input type="checkbox" name="permissions[]" value="payments" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('payments', old('permissions', [])) ? 'checked' : '' }}>
+                            <span style="font-size: 14px; color: #374151;">💰 Payments</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" onclick="toggleForm()" style="background: #e5e7eb; color: #374151; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
                     Cancel
@@ -109,7 +155,9 @@
                     <th style="padding: 15px; text-align: left; font-weight: 600; color: #6b7280;">Type</th>
                     <th style="padding: 15px; text-align: left; font-weight: 600; color: #6b7280;">Role</th>
                     <th style="padding: 15px; text-align: left; font-weight: 600; color: #6b7280;">Verified</th>
+                    <th style="padding: 15px; text-align: left; font-weight: 600; color: #6b7280;">Admin Access</th>
                     <th style="padding: 15px; text-align: left; font-weight: 600; color: #6b7280;">Joined</th>
+                    <th style="padding: 15px; text-align: left; font-weight: 600; color: #6b7280;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -167,17 +215,95 @@
                             </span>
                         @endif
                     </td>
+                    <td style="padding: 15px;">
+                        @if($user->role == 'admin')
+                            <span style="background: #fce7f3; color: #9f1239; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">
+                                👑 Full Access
+                            </span>
+                        @elseif($user->admin_access)
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">
+                                    ✓ Granted
+                                </span>
+                                <button onclick="togglePermissionsModal({{ $user->id }}, {{ json_encode($user->permissions ?? []) }})" style="background: #3b82f6; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;">
+                                    ⚙️ Permissions
+                                </button>
+                            </div>
+                        @else
+                            <span style="background: #f3f4f6; color: #6b7280; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">
+                                ✗ No Access
+                            </span>
+                        @endif
+                    </td>
                     <td style="padding: 15px; color: #6b7280;">{{ $user->created_at->format('M d, Y') }}</td>
+                    <td style="padding: 15px;">
+                        @if($user->role !== 'admin')
+                            <form method="POST" action="{{ route('admin.users.toggleAccess', $user->id) }}" style="display: inline;">
+                                @csrf
+                                <button type="submit" style="background: {{ $user->admin_access ? '#ef4444' : '#10b981' }}; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                                    {{ $user->admin_access ? '🔒 Revoke' : '🔓 Grant' }}
+                                </button>
+                            </form>
+                        @else
+                            <span style="color: #9ca3af; font-size: 13px;">Protected</span>
+                        @endif
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" style="padding: 40px; text-align: center; color: #9ca3af;">
+                    <td colspan="10" style="padding: 40px; text-align: center; color: #9ca3af;">
                         No users found
                     </td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Permissions Modal -->
+<div id="permissionsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%;">
+        <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: 600;">Edit User Permissions</h2>
+
+        <form id="permissionsForm" method="POST" action="">
+            @csrf
+            <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <input type="checkbox" name="permissions[]" value="dashboard" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span style="font-size: 15px; color: #374151;">📊 Dashboard & Analytics</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <input type="checkbox" name="permissions[]" value="users" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span style="font-size: 15px; color: #374151;">👥 User Management</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <input type="checkbox" name="permissions[]" value="properties" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span style="font-size: 15px; color: #374151;">🏘️ Properties</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <input type="checkbox" name="permissions[]" value="universities" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span style="font-size: 15px; color: #374151;">🏫 Universities</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <input type="checkbox" name="permissions[]" value="reviews" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span style="font-size: 15px; color: #374151;">⭐ Reviews & Likes</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <input type="checkbox" name="permissions[]" value="payments" style="width: 18px; height: 18px; cursor: pointer;">
+                    <span style="font-size: 15px; color: #374151;">💰 Payments</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" onclick="closePermissionsModal()" style="background: #e5e7eb; color: #374151; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    Cancel
+                </button>
+                <button type="submit" style="background: #10b981; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    Save Permissions
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -189,6 +315,32 @@ function toggleForm() {
     } else {
         form.style.display = 'none';
     }
+}
+
+function togglePermissionsModal(userId, currentPermissions) {
+    const modal = document.getElementById('permissionsModal');
+    const form = document.getElementById('permissionsForm');
+
+    // Set form action
+    form.action = `/admin/users/${userId}/permissions`;
+
+    // Uncheck all checkboxes first
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+
+    // Check the current permissions
+    if (currentPermissions && currentPermissions.length > 0) {
+        currentPermissions.forEach(permission => {
+            const checkbox = form.querySelector(`input[value="${permission}"]`);
+            if (checkbox) checkbox.checked = true;
+        });
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closePermissionsModal() {
+    document.getElementById('permissionsModal').style.display = 'none';
 }
 
 // Show form if there are validation errors
