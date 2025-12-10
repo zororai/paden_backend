@@ -101,67 +101,93 @@
 
                     <!-- Dashboard & Analytics -->
                     <div style="margin-bottom: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                            <input type="checkbox" name="permissions[]" value="dashboard" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('dashboard', old('permissions', [])) ? 'checked' : '' }}>
-                            <span style="font-size: 14px; color: #374151; font-weight: 600;">📊 Dashboard & Analytics</span>
-                        </label>
-                        <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                            Includes: Overview, Reg Payment Analytics, Direction Payment Analytics, University Analytics
+                        <div style="font-size: 14px; color: #374151; font-weight: 600; margin-bottom: 10px;">📊 Dashboard & Analytics</div>
+                        <div style="padding-left: 20px; display: grid; gap: 6px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="dashboard.overview" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('dashboard.overview', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">📈 Overview</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="dashboard.reg_payment" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('dashboard.reg_payment', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">📝 Reg Payment Analytics</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="dashboard.direction_payment" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('dashboard.direction_payment', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🧭 Direction Payment Analytics</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="dashboard.university" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('dashboard.university', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🏫 University Analytics</span>
+                            </label>
                         </div>
                     </div>
 
                     <!-- User Management -->
                     <div style="margin-bottom: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                            <input type="checkbox" name="permissions[]" value="users" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('users', old('permissions', [])) ? 'checked' : '' }}>
-                            <span style="font-size: 14px; color: #374151; font-weight: 600;">👥 User Management</span>
-                        </label>
-                        <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                            Includes: All Users, Landlords, Students
+                        <div style="font-size: 14px; color: #374151; font-weight: 600; margin-bottom: 10px;">👥 User Management</div>
+                        <div style="padding-left: 20px; display: grid; gap: 6px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="users.all" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('users.all', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">👥 All Users</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="users.landlords" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('users.landlords', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🏠 Landlords</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="users.students" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('users.students', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🎓 Students</span>
+                            </label>
                         </div>
-                    </div>
-
-                    <!-- Properties -->
+                    </div>                    <!-- Properties -->
                     <div style="margin-bottom: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                            <input type="checkbox" name="permissions[]" value="properties" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('properties', old('permissions', [])) ? 'checked' : '' }}>
-                            <span style="font-size: 14px; color: #374151; font-weight: 600;">🏘️ Properties</span>
-                        </label>
-                        <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                            Includes: Properties List
+                        <div style="font-size: 14px; color: #374151; font-weight: 600; margin-bottom: 10px;">🏘️ Properties</div>
+                        <div style="padding-left: 20px; display: grid; gap: 6px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="properties.list" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('properties.list', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🏠 Properties List</span>
+                            </label>
                         </div>
                     </div>
 
                     <!-- Universities -->
                     <div style="margin-bottom: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                            <input type="checkbox" name="permissions[]" value="universities" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('universities', old('permissions', [])) ? 'checked' : '' }}>
-                            <span style="font-size: 14px; color: #374151; font-weight: 600;">🏫 Universities</span>
-                        </label>
-                        <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                            Includes: Universities List
+                        <div style="font-size: 14px; color: #374151; font-weight: 600; margin-bottom: 10px;">🏫 Universities</div>
+                        <div style="padding-left: 20px; display: grid; gap: 6px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="universities.list" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('universities.list', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🏫 Universities List</span>
+                            </label>
                         </div>
                     </div>
 
                     <!-- Reviews & Likes -->
                     <div style="margin-bottom: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                            <input type="checkbox" name="permissions[]" value="reviews" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('reviews', old('permissions', [])) ? 'checked' : '' }}>
-                            <span style="font-size: 14px; color: #374151; font-weight: 600;">⭐ Reviews & Likes</span>
-                        </label>
-                        <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                            Includes: Reviews, Likes (Property Valuation section)
+                        <div style="font-size: 14px; color: #374151; font-weight: 600; margin-bottom: 10px;">⭐ Reviews & Likes</div>
+                        <div style="padding-left: 20px; display: grid; gap: 6px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="reviews.list" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('reviews.list', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">⭐ Reviews</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="reviews.likes" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('reviews.likes', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">❤️ Likes</span>
+                            </label>
                         </div>
                     </div>
 
                     <!-- Payments -->
                     <div style="margin-bottom: 16px; padding: 12px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
-                            <input type="checkbox" name="permissions[]" value="payments" style="width: 16px; height: 16px; cursor: pointer;" {{ in_array('payments', old('permissions', [])) ? 'checked' : '' }}>
-                            <span style="font-size: 14px; color: #374151; font-weight: 600;">💰 Payments</span>
-                        </label>
-                        <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                            Includes: Reg Payment, Direction Payment
+                        <div style="font-size: 14px; color: #374151; font-weight: 600; margin-bottom: 10px;">💰 Payments</div>
+                        <div style="padding-left: 20px; display: grid; gap: 6px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="payments.reg" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('payments.reg', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">📝 Reg Payment</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" name="permissions[]" value="payments.direction" style="width: 14px; height: 14px; cursor: pointer;" {{ in_array('payments.direction', old('permissions', [])) ? 'checked' : '' }}>
+                                <span style="font-size: 13px; color: #6b7280;">🧭 Direction Payment</span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -272,24 +298,24 @@
                                             <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">Permissions:</div>
                                             @foreach($user->permissions as $permission)
                                                 <div style="margin-bottom: 6px;">
-                                                    @if($permission == 'dashboard')
-                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
-                                                            📊 Dashboard & Analytics
-                                                        </div>
-                                                        <div style="padding-left: 20px; margin-top: 4px;">
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                    @if(str_starts_with($permission, 'dashboard.'))
+                                                        @if($permission == 'dashboard.overview')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #10b981; font-size: 11px; color: #374151;">
                                                                 📈 Overview
                                                             </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                        @elseif($permission == 'dashboard.reg_payment')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #10b981; font-size: 11px; color: #374151;">
                                                                 📝 Reg Payment Analytics
                                                             </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                        @elseif($permission == 'dashboard.direction_payment')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #10b981; font-size: 11px; color: #374151;">
                                                                 🧭 Direction Payment Analytics
                                                             </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; font-size: 11px; color: #6b7280;">
+                                                        @elseif($permission == 'dashboard.university')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #10b981; font-size: 11px; color: #374151;">
                                                                 🏫 University Analytics
                                                             </div>
-                                                        </div>
+                                                        @endif
                                                     @elseif($permission == 'users')
                                                         <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
                                                             👥 User Management
@@ -403,15 +429,28 @@
         <form id="permissionsForm" method="POST" action="">
             @csrf
             <div style="display: grid; gap: 12px; margin-bottom: 20px;">
-                <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <input type="checkbox" name="permissions[]" value="dashboard" style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="font-size: 15px; color: #374151; font-weight: 600;">📊 Dashboard & Analytics</span>
+                <!-- Dashboard & Analytics -->
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #374151; font-weight: 600; margin-bottom: 10px;">📊 Dashboard & Analytics</div>
+                    <div style="padding-left: 20px; display: grid; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="dashboard.overview" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">📈 Overview</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="dashboard.reg_payment" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">📝 Reg Payment Analytics</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="dashboard.direction_payment" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🧭 Direction Payment Analytics</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="dashboard.university" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🏫 University Analytics</span>
+                        </label>
                     </div>
-                    <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                        Overview, Reg Payment Analytics, Direction Payment Analytics, University Analytics
-                    </div>
-                </label>
+                </div>
 
                 <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">

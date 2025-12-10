@@ -312,24 +312,32 @@
                     $userPermissions = $currentUser->permissions ?? [];
                 @endphp
 
-                @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard'))
+                @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard.overview') || $currentUser->hasPermission('dashboard.reg_payment') || $currentUser->hasPermission('dashboard.direction_payment') || $currentUser->hasPermission('dashboard.university'))
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('dashboard') || request()->routeIs('admin.regPaymentAnalytics') || request()->routeIs('admin.directionPaymentAnalytics') || request()->routeIs('admin.universityAnalytics') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>📊 Dashboard</span>
                     </div>
                     <div class="dropdown-menu">
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard.overview'))
                         <a href="{{ route('dashboard') }}" class="dropdown-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                             <span>📈</span> Overview
                         </a>
+                        @endif
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard.reg_payment'))
                         <a href="{{ route('admin.regPaymentAnalytics') }}" class="dropdown-item {{ request()->routeIs('admin.regPaymentAnalytics') ? 'active' : '' }}">
                             <span>📝</span> Reg Payment
                         </a>
+                        @endif
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard.direction_payment'))
                         <a href="{{ route('admin.directionPaymentAnalytics') }}" class="dropdown-item {{ request()->routeIs('admin.directionPaymentAnalytics') ? 'active' : '' }}">
                             <span>🧭</span> Direction Payment
                         </a>
+                        @endif
+                        @if($currentUser->role === 'admin' || $currentUser->hasPermission('dashboard.university'))
                         <a href="{{ route('admin.universityAnalytics') }}" class="dropdown-item {{ request()->routeIs('admin.universityAnalytics') ? 'active' : '' }}">
                             <span>🏫</span> University
                         </a>
+                        @endif
                     </div>
                 </div>
                 @endif
