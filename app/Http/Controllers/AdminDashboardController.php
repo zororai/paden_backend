@@ -270,4 +270,24 @@ class AdminDashboardController extends Controller
 
         return response()->json($data);
     }
+
+    public function regPaymentAnalytics()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        return view('admin.reg-payment-analytics');
+    }
+
+    public function directionPaymentAnalytics()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        return view('admin.direction-payment-analytics');
+    }
 }

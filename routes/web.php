@@ -55,6 +55,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/reg-payment-chart-data', [AdminDashboardController::class, 'getRegPaymentChartData'])->name('admin.regPaymentChartData');
     Route::get('/admin/direction-payments', [AdminDashboardController::class, 'directionPayments'])->name('admin.directionPayments');
     Route::get('/admin/direction-payment-chart-data', [AdminDashboardController::class, 'getDirectionPaymentChartData'])->name('admin.directionPaymentChartData');
+    Route::get('/admin/reg-payment-analytics', [AdminDashboardController::class, 'regPaymentAnalytics'])->name('admin.regPaymentAnalytics');
+    Route::get('/admin/direction-payment-analytics', [AdminDashboardController::class, 'directionPaymentAnalytics'])->name('admin.directionPaymentAnalytics');
 });
 
 require __DIR__.'/auth.php';
