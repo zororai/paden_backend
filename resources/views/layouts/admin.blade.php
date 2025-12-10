@@ -311,6 +311,9 @@
                         <span>📊 Dashboard</span>
                     </div>
                     <div class="dropdown-menu">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <span>📈</span> Overview
+                        </a>
                         <a href="{{ route('admin.regPaymentAnalytics') }}" class="dropdown-item {{ request()->routeIs('admin.regPaymentAnalytics') ? 'active' : '' }}">
                             <span>📝</span> Reg Payment
                         </a>
@@ -322,12 +325,22 @@
                         </a>
                     </div>
                 </div>
-                <a href="{{ route('admin.landlords') }}" class="nav-item {{ request()->routeIs('admin.landlords') ? 'active' : '' }}">
-                    <span>🏠</span> Landlords
-                </a>
-                <a href="{{ route('admin.students') }}" class="nav-item {{ request()->routeIs('admin.students') ? 'active' : '' }}">
-                    <span>🎓</span> Students
-                </a>
+                <div class="dropdown">
+                    <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.users') || request()->routeIs('admin.landlords') || request()->routeIs('admin.students') ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                        <span>👥 Users</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('admin.users') }}" class="dropdown-item {{ request()->routeIs('admin.users') ? 'active' : '' }}">
+                            <span>👤</span> All Users
+                        </a>
+                        <a href="{{ route('admin.landlords') }}" class="dropdown-item {{ request()->routeIs('admin.landlords') ? 'active' : '' }}">
+                            <span>🏠</span> Landlords
+                        </a>
+                        <a href="{{ route('admin.students') }}" class="dropdown-item {{ request()->routeIs('admin.students') ? 'active' : '' }}">
+                            <span>🎓</span> Students
+                        </a>
+                    </div>
+                </div>
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.properties') || request()->routeIs('admin.universities') || request()->routeIs('admin.reviews') || request()->routeIs('admin.likes') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>🏘️ Properties</span>

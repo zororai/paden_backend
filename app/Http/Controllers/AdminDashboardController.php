@@ -385,4 +385,46 @@ class AdminDashboardController extends Controller
 
         return view('admin.likes', compact('likes'));
     }
+
+    public function users()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $users = User::orderBy('created_at', 'desc')->get();
+
+        return view('admin.users', compact('users'));
+    }
+
+    public function storeUser(Request $request)
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'type' => 'required|in:student,landlord,agent',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'surname' => $request->surname,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'type' => $request->type,
+            'phone' => $request->phone,
+            'role' => 'user',
+            'email_verified_at' => now(), // Auto-verify admin-created users
+        ]);
+
+        return redirect()->route('admin.users')->with('success', 'User created successfully!');
+    }
 }

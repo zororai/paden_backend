@@ -63,6 +63,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/university-analytics', [AdminDashboardController::class, 'universityAnalytics'])->name('admin.universityAnalytics');
     Route::get('/admin/reviews', [AdminDashboardController::class, 'reviews'])->name('admin.reviews');
     Route::get('/admin/likes', [AdminDashboardController::class, 'likes'])->name('admin.likes');
+    Route::get('/admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
+    Route::post('/admin/users', [AdminDashboardController::class, 'storeUser'])->name('admin.users.store');
 });
 
 require __DIR__.'/auth.php';
