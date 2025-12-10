@@ -126,4 +126,18 @@ class AdminDashboardController extends Controller
 
         return view('admin.reg-payments', compact('payments'));
     }
+
+    public function directionPayments()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $payments = \App\Models\Directions::with('user', 'property')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.direction-payments', compact('payments'));
+    }
 }

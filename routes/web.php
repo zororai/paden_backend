@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/chart-data', [AdminDashboardController::class, 'getChartData'])->name('admin.chartData');
     Route::get('/admin/reg-payments', [AdminDashboardController::class, 'regPayments'])->name('admin.regPayments');
 Route::get('/admin/direction-payments', [AdminDashboardController::class, 'directionPayments'])->name('admin.directionPayments');
+Route::get('/admin/direction-payments', [AdminDashboardController::class, 'directionPayments'])->name('admin.directionPayments');
 });
 
 require __DIR__.'/auth.php';

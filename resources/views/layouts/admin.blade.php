@@ -323,7 +323,7 @@
                         <a href="{{ route('admin.regPayments') }}" class="dropdown-item {{ request()->routeIs('admin.regPayments') ? 'active' : '' }}">
                             <span>📝</span> Reg Payment
                         </a>
-                        <a href="#" class="dropdown-item">
+                        <a href="{{ route('admin.directionPayments') }}" class="dropdown-item {{ request()->routeIs('admin.directionPayments') ? 'active' : '' }}">
                             <span>🧭</span> Direction Payment
                         </a>
                     </div>
