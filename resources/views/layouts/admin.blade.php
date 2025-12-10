@@ -341,6 +341,9 @@
                         </a>
                     </div>
                 </div>
+                <a href="{{ route('admin.propertyValuation') }}" class="nav-item {{ request()->routeIs('admin.propertyValuation') ? 'active' : '' }}">
+                    <span>💰</span> Property Valuation
+                </a>
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.regPayments') || request()->routeIs('admin.directionPayments') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>💰 Payments</span>

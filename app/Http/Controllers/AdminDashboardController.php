@@ -357,4 +357,21 @@ class AdminDashboardController extends Controller
 
         return view('admin.university-analytics', compact('universities'));
     }
+
+    public function propertyValuation()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $properties = \App\Models\Properties::orderBy('created_at', 'desc')->get();
+        
+        // Calculate total valuation
+        $totalValuation = $properties->sum('price');
+        $propertyCount = $properties->count();
+        $averagePrice = $propertyCount > 0 ? $totalValuation / $propertyCount : 0;
+
+        return view('admin.property-valuation', compact('properties', 'totalValuation', 'propertyCount', 'averagePrice'));
+    }
 }
