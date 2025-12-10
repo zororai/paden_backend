@@ -15,6 +15,7 @@
             <button class="period-btn active" data-period="daily">Daily</button>
             <button class="period-btn" data-period="weekly">Weekly</button>
             <button class="period-btn" data-period="monthly">Monthly</button>
+            <button class="period-btn" data-period="yearly">Yearly</button>
         </div>
     </div>
     <div style="padding: 20px;">

@@ -171,7 +171,7 @@ class AdminDashboardController extends Controller
                     'count' => $count,
                 ];
             }
-        } else {
+        } elseif ($period === 'monthly') {
             // Last 6 months
             for ($i = 5; $i >= 0; $i--) {
                 $date = now()->subMonths($i);
@@ -183,6 +183,20 @@ class AdminDashboardController extends Controller
                     ->count();
                 $data[] = [
                     'label' => $date->format('M Y'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        } else {
+            // Yearly - Last 5 years
+            for ($i = 4; $i >= 0; $i--) {
+                $year = now()->subYears($i)->year;
+                $totalAmount = \App\Models\regMoney::whereYear('created_at', $year)
+                    ->sum('amount');
+                $count = \App\Models\regMoney::whereYear('created_at', $year)
+                    ->count();
+                $data[] = [
+                    'label' => (string) $year,
                     'amount' => (float) $totalAmount,
                     'count' => $count,
                 ];
@@ -222,7 +236,7 @@ class AdminDashboardController extends Controller
                     'count' => $count,
                 ];
             }
-        } else {
+        } elseif ($period === 'monthly') {
             // Last 6 months
             for ($i = 5; $i >= 0; $i--) {
                 $date = now()->subMonths($i);
@@ -234,6 +248,20 @@ class AdminDashboardController extends Controller
                     ->count();
                 $data[] = [
                     'label' => $date->format('M Y'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        } else {
+            // Yearly - Last 5 years
+            for ($i = 4; $i >= 0; $i--) {
+                $year = now()->subYears($i)->year;
+                $totalAmount = \App\Models\Directions::whereYear('created_at', $year)
+                    ->sum('amount');
+                $count = \App\Models\Directions::whereYear('created_at', $year)
+                    ->count();
+                $data[] = [
+                    'label' => (string) $year,
                     'amount' => (float) $totalAmount,
                     'count' => $count,
                 ];
