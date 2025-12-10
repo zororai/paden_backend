@@ -290,4 +290,15 @@ class AdminDashboardController extends Controller
 
         return view('admin.direction-payment-analytics');
     }
+
+    public function properties()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $properties = \App\Models\Properties::orderBy('created_at', 'desc')->get();
+        return view('admin.properties', compact('properties'));
+    }
 }
