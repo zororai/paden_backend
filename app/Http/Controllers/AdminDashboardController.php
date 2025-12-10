@@ -140,4 +140,106 @@ class AdminDashboardController extends Controller
 
         return view('admin.direction-payments', compact('payments'));
     }
+
+    public function getRegPaymentChartData(Request $request)
+    {
+        $period = $request->get('period', 'daily');
+        $data = [];
+
+        if ($period === 'daily') {
+            // Last 7 days
+            for ($i = 6; $i >= 0; $i--) {
+                $date = now()->subDays($i);
+                $totalAmount = \App\Models\regMoney::whereDate('created_at', $date->toDateString())->sum('amount');
+                $count = \App\Models\regMoney::whereDate('created_at', $date->toDateString())->count();
+                $data[] = [
+                    'label' => $date->format('M d'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        } elseif ($period === 'weekly') {
+            // Last 6 weeks
+            for ($i = 5; $i >= 0; $i--) {
+                $startOfWeek = now()->subWeeks($i)->startOfWeek();
+                $endOfWeek = now()->subWeeks($i)->endOfWeek();
+                $totalAmount = \App\Models\regMoney::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('amount');
+                $count = \App\Models\regMoney::whereBetween('created_at', [$startOfWeek, $endOfWeek])->count();
+                $data[] = [
+                    'label' => 'Week ' . $startOfWeek->format('M d'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        } else {
+            // Last 6 months
+            for ($i = 5; $i >= 0; $i--) {
+                $date = now()->subMonths($i);
+                $totalAmount = \App\Models\regMoney::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('amount');
+                $count = \App\Models\regMoney::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->count();
+                $data[] = [
+                    'label' => $date->format('M Y'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        }
+
+        return response()->json($data);
+    }
+
+    public function getDirectionPaymentChartData(Request $request)
+    {
+        $period = $request->get('period', 'daily');
+        $data = [];
+
+        if ($period === 'daily') {
+            // Last 7 days
+            for ($i = 6; $i >= 0; $i--) {
+                $date = now()->subDays($i);
+                $totalAmount = \App\Models\Directions::whereDate('created_at', $date->toDateString())->sum('amount');
+                $count = \App\Models\Directions::whereDate('created_at', $date->toDateString())->count();
+                $data[] = [
+                    'label' => $date->format('M d'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        } elseif ($period === 'weekly') {
+            // Last 6 weeks
+            for ($i = 5; $i >= 0; $i--) {
+                $startOfWeek = now()->subWeeks($i)->startOfWeek();
+                $endOfWeek = now()->subWeeks($i)->endOfWeek();
+                $totalAmount = \App\Models\Directions::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('amount');
+                $count = \App\Models\Directions::whereBetween('created_at', [$startOfWeek, $endOfWeek])->count();
+                $data[] = [
+                    'label' => 'Week ' . $startOfWeek->format('M d'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        } else {
+            // Last 6 months
+            for ($i = 5; $i >= 0; $i--) {
+                $date = now()->subMonths($i);
+                $totalAmount = \App\Models\Directions::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('amount');
+                $count = \App\Models\Directions::whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->count();
+                $data[] = [
+                    'label' => $date->format('M Y'),
+                    'amount' => (float) $totalAmount,
+                    'count' => $count,
+                ];
+            }
+        }
+
+        return response()->json($data);
+    }
 }

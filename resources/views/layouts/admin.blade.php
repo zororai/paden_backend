@@ -306,9 +306,22 @@
         <nav>
             <div class="nav-section">
                 <div class="nav-title">Menu</div>
-                <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <span>📊</span> Dashboard
-                </a>
+                <div class="dropdown">
+                    <div class="nav-item dropdown-toggle {{ request()->routeIs('dashboard') || request()->routeIs('admin.regPayments') || request()->routeIs('admin.directionPayments') ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                        <span>📊 Dashboard</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <span>📈</span> Overview
+                        </a>
+                        <a href="{{ route('admin.regPayments') }}" class="dropdown-item {{ request()->routeIs('admin.regPayments') ? 'active' : '' }}">
+                            <span>📝</span> Reg Payment
+                        </a>
+                        <a href="{{ route('admin.directionPayments') }}" class="dropdown-item {{ request()->routeIs('admin.directionPayments') ? 'active' : '' }}">
+                            <span>🧭</span> Direction Payment
+                        </a>
+                    </div>
+                </div>
                 <a href="{{ route('admin.landlords') }}" class="nav-item {{ request()->routeIs('admin.landlords') ? 'active' : '' }}">
                     <span>🏠</span> Landlords
                 </a>

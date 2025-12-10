@@ -40,7 +40,88 @@
         <div class="stat-subtitle">Out of {{ \App\Models\User::whereIn('type', ['landlord', 'agent'])->count() }} landlords</div>
         <div class="stat-icon">🏠</div>
     </div>
+
+    <div class="stat-card payment-dropdown-card" style="position: relative; cursor: pointer;" onclick="togglePaymentDropdown()">
+        <div class="stat-title">💰 Payments</div>
+        <div class="stat-value">{{ \App\Models\regMoney::count() + \App\Models\Directions::count() }}</div>
+        <div class="stat-subtitle">Total transactions</div>
+        <div class="stat-icon">💳</div>
+        <div class="payment-dropdown" id="paymentDropdown" style="display: none;">
+            <a href="{{ route('admin.regPayments') }}" class="payment-dropdown-item">
+                <span>📝</span>
+                <div>
+                    <div style="font-weight: 600;">Reg Payments</div>
+                    <div style="font-size: 12px; color: #6b7280;">{{ \App\Models\regMoney::count() }} transactions</div>
+                </div>
+            </a>
+            <a href="{{ route('admin.directionPayments') }}" class="payment-dropdown-item">
+                <span>🧭</span>
+                <div>
+                    <div style="font-weight: 600;">Direction Payments</div>
+                    <div style="font-size: 12px; color: #6b7280;">{{ \App\Models\Directions::count() }} transactions</div>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
+
+<style>
+    .payment-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        margin-top: 10px;
+        overflow: hidden;
+        z-index: 1000;
+    }
+
+    .payment-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        text-decoration: none;
+        color: #1f2937;
+        transition: background 0.2s;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .payment-dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .payment-dropdown-item:hover {
+        background: #f9fafb;
+    }
+
+    .payment-dropdown-item span {
+        font-size: 24px;
+    }
+
+    .payment-dropdown-card:hover {
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    function togglePaymentDropdown() {
+        const dropdown = document.getElementById('paymentDropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const card = document.querySelector('.payment-dropdown-card');
+        const dropdown = document.getElementById('paymentDropdown');
+        if (dropdown && !card.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+</script>
 
 <div class="card" style="margin-top: 30px;">
     <div class="card-header">
