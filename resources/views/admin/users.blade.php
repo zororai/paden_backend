@@ -221,12 +221,41 @@
                                 👑 Full Access
                             </span>
                         @elseif($user->admin_access)
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">
-                                    ✓ Granted
-                                </span>
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <div style="position: relative; display: inline-block;">
+                                    <button onclick="togglePermissionDropdown({{ $user->id }})" style="background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #10b981; display: flex; align-items: center; gap: 6px;">
+                                        ✓ Granted ({{ count($user->permissions ?? []) }})
+                                        <span style="font-size: 10px;">▼</span>
+                                    </button>
+                                    <div id="permDropdown{{ $user->id }}" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 12px; min-width: 220px; z-index: 100; margin-top: 5px;">
+                                        @if(!empty($user->permissions) && count($user->permissions) > 0)
+                                            <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">Permissions:</div>
+                                            @foreach($user->permissions as $permission)
+                                                <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; margin-bottom: 4px; font-size: 12px; color: #374151;">
+                                                    @if($permission == 'dashboard')
+                                                        📊 Dashboard & Analytics
+                                                    @elseif($permission == 'users')
+                                                        👥 User Management
+                                                    @elseif($permission == 'properties')
+                                                        🏘️ Properties
+                                                    @elseif($permission == 'universities')
+                                                        🏫 Universities
+                                                    @elseif($permission == 'reviews')
+                                                        ⭐ Reviews & Likes
+                                                    @elseif($permission == 'payments')
+                                                        💰 Payments
+                                                    @else
+                                                        {{ ucfirst($permission) }}
+                                                    @endif
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div style="font-size: 12px; color: #9ca3af; text-align: center; padding: 8px;">No permissions set</div>
+                                        @endif
+                                    </div>
+                                </div>
                                 <button onclick="togglePermissionsModal({{ $user->id }}, {{ json_encode($user->permissions ?? []) }})" style="background: #3b82f6; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;">
-                                    ⚙️ Permissions
+                                    ⚙️ Edit
                                 </button>
                             </div>
                         @else
@@ -342,6 +371,34 @@ function togglePermissionsModal(userId, currentPermissions) {
 function closePermissionsModal() {
     document.getElementById('permissionsModal').style.display = 'none';
 }
+
+function togglePermissionDropdown(userId) {
+    const dropdown = document.getElementById('permDropdown' + userId);
+
+    // Close all other dropdowns first
+    document.querySelectorAll('[id^="permDropdown"]').forEach(d => {
+        if (d.id !== 'permDropdown' + userId) {
+            d.style.display = 'none';
+        }
+    });
+
+    // Toggle current dropdown
+    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('[onclick^="togglePermissionDropdown"]') &&
+        !event.target.closest('[id^="permDropdown"]')) {
+        document.querySelectorAll('[id^="permDropdown"]').forEach(d => {
+            d.style.display = 'none';
+        });
+    }
+});
 
 // Show form if there are validation errors
 @if($errors->any())
