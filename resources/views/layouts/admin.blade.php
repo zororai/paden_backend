@@ -307,7 +307,7 @@
             <div class="nav-section">
                 <div class="nav-title">Menu</div>
                 <div class="dropdown">
-                    <div class="nav-item dropdown-toggle {{ request()->routeIs('dashboard') || request()->routeIs('admin.regPaymentAnalytics') || request()->routeIs('admin.directionPaymentAnalytics') ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                    <div class="nav-item dropdown-toggle {{ request()->routeIs('dashboard') || request()->routeIs('admin.regPaymentAnalytics') || request()->routeIs('admin.directionPaymentAnalytics') || request()->routeIs('admin.universityAnalytics') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>📊 Dashboard</span>
                     </div>
                     <div class="dropdown-menu">
@@ -316,6 +316,9 @@
                         </a>
                         <a href="{{ route('admin.directionPaymentAnalytics') }}" class="dropdown-item {{ request()->routeIs('admin.directionPaymentAnalytics') ? 'active' : '' }}">
                             <span>🧭</span> Direction Payment
+                        </a>
+                        <a href="{{ route('admin.universityAnalytics') }}" class="dropdown-item {{ request()->routeIs('admin.universityAnalytics') ? 'active' : '' }}">
+                            <span>🏫</span> University
                         </a>
                     </div>
                 </div>

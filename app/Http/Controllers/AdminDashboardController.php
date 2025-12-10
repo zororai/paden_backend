@@ -334,4 +334,27 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.universities')->with('success', 'University added successfully!');
     }
+
+    public function universityAnalytics()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Get universities with property counts
+        // Match university name with city in properties table
+        $universities = \App\Models\University::all()->map(function($university) {
+            $propertyCount = \App\Models\Properties::where('city', $university->university)->count();
+            return [
+                'id' => $university->id,
+                'university' => $university->university,
+                'latitude' => $university->latitude,
+                'longitude' => $university->longitude,
+                'property_count' => $propertyCount,
+            ];
+        })->sortByDesc('property_count');
+
+        return view('admin.university-analytics', compact('universities'));
+    }
 }

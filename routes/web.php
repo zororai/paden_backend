@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/properties', [AdminDashboardController::class, 'properties'])->name('admin.properties');
     Route::get('/admin/universities', [AdminDashboardController::class, 'universities'])->name('admin.universities');
     Route::post('/admin/universities', [AdminDashboardController::class, 'storeUniversity'])->name('admin.universities.store');
+    Route::get('/admin/university-analytics', [AdminDashboardController::class, 'universityAnalytics'])->name('admin.universityAnalytics');
 });
 
 require __DIR__.'/auth.php';
