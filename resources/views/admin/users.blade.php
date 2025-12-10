@@ -227,25 +227,90 @@
                                         ✓ Granted ({{ count($user->permissions ?? []) }})
                                         <span style="font-size: 10px;">▼</span>
                                     </button>
-                                    <div id="permDropdown{{ $user->id }}" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 12px; min-width: 220px; z-index: 100; margin-top: 5px;">
+                                    <div id="permDropdown{{ $user->id }}" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 12px; min-width: 250px; z-index: 100; margin-top: 5px; max-height: 400px; overflow-y: auto;">
                                         @if(!empty($user->permissions) && count($user->permissions) > 0)
                                             <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px;">Permissions:</div>
                                             @foreach($user->permissions as $permission)
-                                                <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; margin-bottom: 4px; font-size: 12px; color: #374151;">
+                                                <div style="margin-bottom: 6px;">
                                                     @if($permission == 'dashboard')
-                                                        📊 Dashboard & Analytics
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            📊 Dashboard & Analytics
+                                                        </div>
+                                                        <div style="padding-left: 20px; margin-top: 4px;">
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                📈 Overview
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                📝 Reg Payment Analytics
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                🧭 Direction Payment Analytics
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #10b981; font-size: 11px; color: #6b7280;">
+                                                                🏫 University Analytics
+                                                            </div>
+                                                        </div>
                                                     @elseif($permission == 'users')
-                                                        👥 User Management
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            👥 User Management
+                                                        </div>
+                                                        <div style="padding-left: 20px; margin-top: 4px;">
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #3b82f6; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                👤 All Users
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #3b82f6; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                🏠 Landlords
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #3b82f6; font-size: 11px; color: #6b7280;">
+                                                                🎓 Students
+                                                            </div>
+                                                        </div>
                                                     @elseif($permission == 'properties')
-                                                        🏘️ Properties
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            🏘️ Properties
+                                                        </div>
+                                                        <div style="padding-left: 20px; margin-top: 4px;">
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #f59e0b; font-size: 11px; color: #6b7280;">
+                                                                🏠 Properties List
+                                                            </div>
+                                                        </div>
                                                     @elseif($permission == 'universities')
-                                                        🏫 Universities
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            🏫 Universities
+                                                        </div>
+                                                        <div style="padding-left: 20px; margin-top: 4px;">
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #8b5cf6; font-size: 11px; color: #6b7280;">
+                                                                🏫 Universities List
+                                                            </div>
+                                                        </div>
                                                     @elseif($permission == 'reviews')
-                                                        ⭐ Reviews & Likes
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            ⭐ Reviews & Likes
+                                                        </div>
+                                                        <div style="padding-left: 20px; margin-top: 4px;">
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #ec4899; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                ⭐ Reviews
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #ec4899; font-size: 11px; color: #6b7280;">
+                                                                ❤️ Likes
+                                                            </div>
+                                                        </div>
                                                     @elseif($permission == 'payments')
-                                                        💰 Payments
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            💰 Payments
+                                                        </div>
+                                                        <div style="padding-left: 20px; margin-top: 4px;">
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #14b8a6; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                                📝 Reg Payment
+                                                            </div>
+                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #14b8a6; font-size: 11px; color: #6b7280;">
+                                                                🧭 Direction Payment
+                                                            </div>
+                                                        </div>
                                                     @else
-                                                        {{ ucfirst($permission) }}
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151;">
+                                                            {{ ucfirst($permission) }}
+                                                        </div>
                                                     @endif
                                                 </div>
                                             @endforeach
