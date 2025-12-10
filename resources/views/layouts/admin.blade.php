@@ -329,7 +329,7 @@
                     <span>🎓</span> Students
                 </a>
                 <div class="dropdown">
-                    <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.properties') || request()->routeIs('admin.universities') ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                    <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.properties') || request()->routeIs('admin.universities') || request()->routeIs('admin.reviews') || request()->routeIs('admin.likes') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>🏘️ Properties</span>
                     </div>
                     <div class="dropdown-menu">
@@ -339,11 +339,15 @@
                         <a href="{{ route('admin.universities') }}" class="dropdown-item {{ request()->routeIs('admin.universities') ? 'active' : '' }}">
                             <span>🏫</span> University
                         </a>
+                        <div style="padding: 8px 20px; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px;">Property Valuation</div>
+                        <a href="{{ route('admin.reviews') }}" class="dropdown-item {{ request()->routeIs('admin.reviews') ? 'active' : '' }}">
+                            <span>⭐</span> Reviews
+                        </a>
+                        <a href="{{ route('admin.likes') }}" class="dropdown-item {{ request()->routeIs('admin.likes') ? 'active' : '' }}">
+                            <span>❤️</span> Likes
+                        </a>
                     </div>
                 </div>
-                <a href="{{ route('admin.propertyValuation') }}" class="nav-item {{ request()->routeIs('admin.propertyValuation') ? 'active' : '' }}">
-                    <span>💰</span> Property Valuation
-                </a>
                 <div class="dropdown">
                     <div class="nav-item dropdown-toggle {{ request()->routeIs('admin.regPayments') || request()->routeIs('admin.directionPayments') ? 'active' : '' }}" onclick="toggleDropdown(this)">
                         <span>💰 Payments</span>

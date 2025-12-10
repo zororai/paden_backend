@@ -358,20 +358,31 @@ class AdminDashboardController extends Controller
         return view('admin.university-analytics', compact('universities'));
     }
 
-    public function propertyValuation()
+    public function reviews()
     {
         // Check if user is admin
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Unauthorized access');
         }
 
-        $properties = \App\Models\Properties::orderBy('created_at', 'desc')->get();
-        
-        // Calculate total valuation
-        $totalValuation = $properties->sum('price');
-        $propertyCount = $properties->count();
-        $averagePrice = $propertyCount > 0 ? $totalValuation / $propertyCount : 0;
+        $reviews = \App\Models\Review::with(['user', 'property'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('admin.property-valuation', compact('properties', 'totalValuation', 'propertyCount', 'averagePrice'));
+        return view('admin.reviews', compact('reviews'));
+    }
+
+    public function likes()
+    {
+        // Check if user is admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $likes = \App\Models\Like::with(['user', 'property'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.likes', compact('likes'));
     }
 }
