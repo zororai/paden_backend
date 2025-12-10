@@ -316,62 +316,67 @@
                                                                 🏫 University Analytics
                                                             </div>
                                                         @endif
-                                                    @elseif($permission == 'users')
-                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
-                                                            👥 User Management
-                                                        </div>
-                                                        <div style="padding-left: 20px; margin-top: 4px;">
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #3b82f6; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
-                                                                👤 All Users
+                                                    @elseif(str_starts_with($permission, 'users.'))
+                                                        @if($permission == 'users.all')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #3b82f6; font-size: 11px; color: #374151;">
+                                                                👥 All Users
                                                             </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #3b82f6; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
+                                                        @elseif($permission == 'users.landlords')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #3b82f6; font-size: 11px; color: #374151;">
                                                                 🏠 Landlords
                                                             </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #3b82f6; font-size: 11px; color: #6b7280;">
+                                                        @elseif($permission == 'users.students')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #3b82f6; font-size: 11px; color: #374151;">
                                                                 🎓 Students
                                                             </div>
+                                                        @endif
+                                                    @elseif($permission == 'properties.list')
+                                                        <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #f59e0b; font-size: 11px; color: #374151;">
+                                                            🏠 Properties List
+                                                        </div>
+                                                    @elseif($permission == 'universities.list')
+                                                        <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #8b5cf6; font-size: 11px; color: #374151;">
+                                                            🏫 Universities List
+                                                        </div>
+                                                    @elseif(str_starts_with($permission, 'reviews.'))
+                                                        @if($permission == 'reviews.list')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #ec4899; font-size: 11px; color: #374151;">
+                                                                ⭐ Reviews
+                                                            </div>
+                                                        @elseif($permission == 'reviews.likes')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #ec4899; font-size: 11px; color: #374151;">
+                                                                ❤️ Likes
+                                                            </div>
+                                                        @endif
+                                                    @elseif(str_starts_with($permission, 'payments.'))
+                                                        @if($permission == 'payments.reg')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #14b8a6; font-size: 11px; color: #374151;">
+                                                                📝 Reg Payment
+                                                            </div>
+                                                        @elseif($permission == 'payments.direction')
+                                                            <div style="padding: 6px 8px; background: #fafafa; border-left: 3px solid #14b8a6; font-size: 11px; color: #374151;">
+                                                                🧭 Direction Payment
+                                                            </div>
+                                                        @endif
+                                                    @elseif($permission == 'users')
+                                                        <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
+                                                            👥 User Management (Legacy)
                                                         </div>
                                                     @elseif($permission == 'properties')
                                                         <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
-                                                            🏘️ Properties
-                                                        </div>
-                                                        <div style="padding-left: 20px; margin-top: 4px;">
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #f59e0b; font-size: 11px; color: #6b7280;">
-                                                                🏠 Properties List
-                                                            </div>
+                                                            🏘️ Properties (Legacy)
                                                         </div>
                                                     @elseif($permission == 'universities')
                                                         <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
-                                                            🏫 Universities
-                                                        </div>
-                                                        <div style="padding-left: 20px; margin-top: 4px;">
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #8b5cf6; font-size: 11px; color: #6b7280;">
-                                                                🏫 Universities List
-                                                            </div>
+                                                            🏫 Universities (Legacy)
                                                         </div>
                                                     @elseif($permission == 'reviews')
                                                         <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
-                                                            ⭐ Reviews & Likes
-                                                        </div>
-                                                        <div style="padding-left: 20px; margin-top: 4px;">
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #ec4899; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
-                                                                ⭐ Reviews
-                                                            </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #ec4899; font-size: 11px; color: #6b7280;">
-                                                                ❤️ Likes
-                                                            </div>
+                                                            ⭐ Reviews & Likes (Legacy)
                                                         </div>
                                                     @elseif($permission == 'payments')
                                                         <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151; font-weight: 600;">
-                                                            💰 Payments
-                                                        </div>
-                                                        <div style="padding-left: 20px; margin-top: 4px;">
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #14b8a6; margin-bottom: 2px; font-size: 11px; color: #6b7280;">
-                                                                📝 Reg Payment
-                                                            </div>
-                                                            <div style="padding: 4px 8px; background: #fafafa; border-left: 2px solid #14b8a6; font-size: 11px; color: #6b7280;">
-                                                                🧭 Direction Payment
-                                                            </div>
+                                                            💰 Payments (Legacy)
                                                         </div>
                                                     @else
                                                         <div style="padding: 6px 8px; background: #f3f4f6; border-radius: 6px; font-size: 12px; color: #374151;">
@@ -452,55 +457,76 @@
                     </div>
                 </div>
 
-                <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <input type="checkbox" name="permissions[]" value="users" style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="font-size: 15px; color: #374151; font-weight: 600;">👥 User Management</span>
+                <!-- User Management -->
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #374151; font-weight: 600; margin-bottom: 10px;">👥 User Management</div>
+                    <div style="padding-left: 20px; display: grid; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="users.all" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">👥 All Users</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="users.landlords" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🏠 Landlords</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="users.students" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🎓 Students</span>
+                        </label>
                     </div>
-                    <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                        All Users, Landlords, Students
-                    </div>
-                </label>
+                </div>
 
-                <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <input type="checkbox" name="permissions[]" value="properties" style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="font-size: 15px; color: #374151; font-weight: 600;">🏘️ Properties</span>
+                <!-- Properties -->
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #374151; font-weight: 600; margin-bottom: 10px;">🏘️ Properties</div>
+                    <div style="padding-left: 20px; display: grid; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="properties.list" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🏠 Properties List</span>
+                        </label>
                     </div>
-                    <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                        Properties List
-                    </div>
-                </label>
+                </div>
 
-                <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <input type="checkbox" name="permissions[]" value="universities" style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="font-size: 15px; color: #374151; font-weight: 600;">🏫 Universities</span>
+                <!-- Universities -->
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #374151; font-weight: 600; margin-bottom: 10px;">🏫 Universities</div>
+                    <div style="padding-left: 20px; display: grid; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="universities.list" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🏫 Universities List</span>
+                        </label>
                     </div>
-                    <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                        Universities List
-                    </div>
-                </label>
+                </div>
 
-                <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <input type="checkbox" name="permissions[]" value="reviews" style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="font-size: 15px; color: #374151; font-weight: 600;">⭐ Reviews & Likes</span>
+                <!-- Reviews & Likes -->
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #374151; font-weight: 600; margin-bottom: 10px;">⭐ Reviews & Likes</div>
+                    <div style="padding-left: 20px; display: grid; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="reviews.list" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">⭐ Reviews</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="reviews.likes" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">❤️ Likes</span>
+                        </label>
                     </div>
-                    <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                        Reviews, Likes (Property Valuation section)
-                    </div>
-                </label>
+                </div>
 
-                <label style="cursor: pointer; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                        <input type="checkbox" name="permissions[]" value="payments" style="width: 18px; height: 18px; cursor: pointer;">
-                        <span style="font-size: 15px; color: #374151; font-weight: 600;">💰 Payments</span>
+                <!-- Payments -->
+                <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <div style="font-size: 15px; color: #374151; font-weight: 600; margin-bottom: 10px;">💰 Payments</div>
+                    <div style="padding-left: 20px; display: grid; gap: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="payments.reg" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">📝 Reg Payment</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" name="permissions[]" value="payments.direction" style="width: 14px; height: 14px; cursor: pointer;">
+                            <span style="font-size: 13px; color: #6b7280;">🧭 Direction Payment</span>
+                        </label>
                     </div>
-                    <div style="padding-left: 28px; font-size: 12px; color: #6b7280;">
-                        Reg Payment, Direction Payment
-                    </div>
-                </label>
+                </div>
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
