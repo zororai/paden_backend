@@ -14,7 +14,8 @@ use App\Http\Controllers\Api\{
     DirectionPaymentController,
     DirectionController,
     ChatController,
-    SmsController
+    SmsController,
+    RoomShareRequestController
 };
 use App\Http\Controllers\Api\Auth\{
     RegisterController,
@@ -117,6 +118,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ✅ SMS Routes
     Route::post('/sms/send/{userId}', [SmsController::class, 'sendSms']);
+
+    // ✅ Room Share Request Routes
+    Route::post('/room-share/send', [RoomShareRequestController::class, 'sendRequest']);
+    Route::get('/room-share/sent', [RoomShareRequestController::class, 'getSentRequests']);
+    Route::get('/room-share/received', [RoomShareRequestController::class, 'getReceivedRequests']);
+    Route::put('/room-share/accept/{id}', [RoomShareRequestController::class, 'acceptRequest']);
+    Route::put('/room-share/reject/{id}', [RoomShareRequestController::class, 'rejectRequest']);
+    Route::delete('/room-share/{id}', [RoomShareRequestController::class, 'deleteRequest']);
+    Route::get('/room-share/student/{id}', [RoomShareRequestController::class, 'getStudentProfile']);
+    Route::get('/room-share/students', [RoomShareRequestController::class, 'getStudents']);
 
 });
 

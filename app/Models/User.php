@@ -42,6 +42,16 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->hasMany(Like::class);
 }
 
+public function sentRoomShareRequests()
+{
+    return $this->hasMany(RoomShareRequest::class, 'sender_id');
+}
+
+public function receivedRoomShareRequests()
+{
+    return $this->hasMany(RoomShareRequest::class, 'receiver_id');
+}
+
     /**
      * The attributes that should be hidden for serialization.
      *
