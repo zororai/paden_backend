@@ -32,7 +32,7 @@ class AdminLoginController extends Controller
     
         if (!$user) {
             return back()->withErrors([
-                'email' => 'Invalid email or password.',
+                'email' => 'DEBUG: User not found with this email.',
             ])->withInput($request->only('email'));
         }
 
@@ -40,26 +40,28 @@ class AdminLoginController extends Controller
             $passwordValid = Hash::check($request->password, $user->password);
         } catch (\RuntimeException $e) {
             // Password in database is not a valid hash - treat as invalid credentials
-            $passwordValid = false;
+            return back()->withErrors([
+                'email' => 'DEBUG: Password hash invalid. Hash starts with: ' . substr($user->password, 0, 10),
+            ])->withInput($request->only('email'));
         }
 
         if (!$passwordValid) {
             return back()->withErrors([
-                'email' => 'Invalid email or password.',
+                'email' => 'DEBUG: Password incorrect. Role: ' . $user->role . ', Verified: ' . ($user->email_verified_at ? 'Yes' : 'No'),
             ])->withInput($request->only('email'));
         }
 
         // Check if user has admin role
         if ($user->role !== 'admin') {
             return back()->withErrors([
-                'email' => 'You do not have admin access.',
+                'email' => 'DEBUG: Role is "' . $user->role . '" not "admin".',
             ])->withInput($request->only('email'));
         }
 
         // Check if email is verified
         if (is_null($user->email_verified_at)) {
             return back()->withErrors([
-                'email' => 'Please verify your email before logging in.',
+                'email' => 'DEBUG: Email not verified.',
             ])->withInput($request->only('email'));
         }
     
