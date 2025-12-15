@@ -15,24 +15,37 @@ class ResetAdminPasswordSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminEmail = env('ADMIN_EMAIL', 'admin@paden.co.zw');
         $defaultPassword = env('ADMIN_RESET_PASSWORD', 'Admin@123456');
 
-        $admins = User::where('role', 'admin')->get();
+        // Check if user exists with this email
+        $user = User::where('email', $adminEmail)->first();
 
-        if ($admins->isEmpty()) {
-            $this->command->warn('No admin users found.');
-            return;
-        }
+        if ($user) {
+            // User exists - update to admin role and reset password
+            $user->role = 'admin';
+            $user->password = Hash::make($defaultPassword);
+            $user->email_verified_at = $user->email_verified_at ?? now();
+            $user->save();
 
-        foreach ($admins as $admin) {
-            $admin->password = Hash::make($defaultPassword);
-            $admin->save();
+            $this->command->info("Updated existing user to admin: {$user->email}");
+        } else {
+            // Create new admin user
+            $user = User::create([
+                'name' => 'Admin',
+                'surname' => 'User',
+                'email' => $adminEmail,
+                'password' => Hash::make($defaultPassword),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]);
 
-            $this->command->info("Password reset for admin: {$admin->email}");
+            $this->command->info("Created new admin user: {$user->email}");
         }
 
         $this->command->newLine();
-        $this->command->warn('⚠️  Default password used: ' . $defaultPassword);
+        $this->command->warn('⚠️  Email: ' . $adminEmail);
+        $this->command->warn('⚠️  Password: ' . $defaultPassword);
         $this->command->warn('⚠️  Please change this password immediately after logging in!');
     }
 }
