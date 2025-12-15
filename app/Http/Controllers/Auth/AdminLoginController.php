@@ -30,7 +30,20 @@ class AdminLoginController extends Controller
     
         $user = User::where('email', $request->email)->first();
     
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Invalid email or password.',
+            ])->withInput($request->only('email'));
+        }
+
+        try {
+            $passwordValid = Hash::check($request->password, $user->password);
+        } catch (\RuntimeException $e) {
+            // Password in database is not a valid hash - treat as invalid credentials
+            $passwordValid = false;
+        }
+
+        if (!$passwordValid) {
             return back()->withErrors([
                 'email' => 'Invalid email or password.',
             ])->withInput($request->only('email'));
