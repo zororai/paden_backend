@@ -35,11 +35,11 @@ class AdminDashboardController extends Controller
                 $date = now()->subDays($i);
                 $data[] = [
                     'label' => $date->format('M d'),
-                    'students' => User::where('type', 'student')
+                    'students' => User::where('role', 'student')
                         ->whereNotNull('email_verified_at')
                         ->whereDate('email_verified_at', $date->format('Y-m-d'))
                         ->count(),
-                    'landlords' => User::whereIn('type', ['landlord', 'agent'])
+                    'landlords' => User::whereIn('role', ['landlord', 'agent'])
                         ->whereNotNull('email_verified_at')
                         ->whereDate('email_verified_at', $date->format('Y-m-d'))
                         ->count(),
@@ -52,11 +52,11 @@ class AdminDashboardController extends Controller
                 $endOfWeek = now()->subWeeks($i)->endOfWeek();
                 $data[] = [
                     'label' => 'Week ' . $startOfWeek->format('M d'),
-                    'students' => User::where('type', 'student')
+                    'students' => User::where('role', 'student')
                         ->whereNotNull('email_verified_at')
                         ->whereBetween('email_verified_at', [$startOfWeek, $endOfWeek])
                         ->count(),
-                    'landlords' => User::whereIn('type', ['landlord', 'agent'])
+                    'landlords' => User::whereIn('role', ['landlord', 'agent'])
                         ->whereNotNull('email_verified_at')
                         ->whereBetween('email_verified_at', [$startOfWeek, $endOfWeek])
                         ->count(),
@@ -68,12 +68,12 @@ class AdminDashboardController extends Controller
                 $date = now()->subMonths($i);
                 $data[] = [
                     'label' => $date->format('M Y'),
-                    'students' => User::where('type', 'student')
+                    'students' => User::where('role', 'student')
                         ->whereNotNull('email_verified_at')
                         ->whereYear('email_verified_at', $date->year)
                         ->whereMonth('email_verified_at', $date->month)
                         ->count(),
-                    'landlords' => User::whereIn('type', ['landlord', 'agent'])
+                    'landlords' => User::whereIn('role', ['landlord', 'agent'])
                         ->whereNotNull('email_verified_at')
                         ->whereYear('email_verified_at', $date->year)
                         ->whereMonth('email_verified_at', $date->month)
@@ -92,8 +92,8 @@ class AdminDashboardController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $landlords = User::where('type', 'landlord')
-            ->orWhere('type', 'agent')
+        $landlords = User::where('role', 'landlord')
+            ->orWhere('role', 'agent')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -107,7 +107,7 @@ class AdminDashboardController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $students = User::where('type', 'student')
+        $students = User::where('role', 'student')
             ->orderBy('created_at', 'desc')
             ->get();
 
