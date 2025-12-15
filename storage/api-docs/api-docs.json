@@ -2192,6 +2192,388 @@
                 ]
             }
         },
+        "/api/room-share/send": {
+            "post": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Send a room share request to another student",
+                "operationId": "aa6fc91078f687db6a66b8396313dce4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "receiver_id",
+                                    "property_id"
+                                ],
+                                "properties": {
+                                    "receiver_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Hi, I'm looking for a roommate. Would you like to share a room?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Request sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Room share request sent successfully."
+                                        },
+                                        "request": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Request already exists"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/sent": {
+            "get": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Get all room share requests sent by the authenticated user",
+                "operationId": "85cacb85c20440c009c1f6aae1e39c78",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved sent requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sent requests retrieved successfully."
+                                        },
+                                        "requests": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/received": {
+            "get": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Get all room share requests received by the authenticated user",
+                "operationId": "26cf1b2b62c333dd702bf8772b33f686",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved received requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Received requests retrieved successfully."
+                                        },
+                                        "requests": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/accept/{id}": {
+            "put": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Accept a room share request",
+                "operationId": "727564eb3cbbde64ca3ca935d2821f73",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request accepted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Room share request accepted."
+                                        },
+                                        "request": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Request not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/reject/{id}": {
+            "put": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Reject a room share request",
+                "operationId": "899dabd9c65d4ebf7d21cfb225b43af5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request rejected successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Room share request rejected."
+                                        },
+                                        "request": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Request not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/{id}": {
+            "delete": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Delete a room share request",
+                "operationId": "c894c6d1610e06b36cbf11a8540aba76",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Room share request deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Request not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/student/{id}": {
+            "get": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "View a student's profile",
+                "operationId": "27c00871441be33bce6acd64ddf332dd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Student profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Student profile retrieved successfully."
+                                        },
+                                        "student": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Student not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/room-share/students": {
+            "get": {
+                "tags": [
+                    "Room Share Requests"
+                ],
+                "summary": "Get list of students at the same university",
+                "operationId": "a39467fc307220e4f42fb5a4ee01e059",
+                "parameters": [
+                    {
+                        "name": "university",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Students retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Students retrieved successfully."
+                                        },
+                                        "students": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/search": {
             "post": {
                 "tags": [
@@ -2787,6 +3169,10 @@
         {
             "name": "Properties",
             "description": "Operations related to properties management"
+        },
+        {
+            "name": "Room Share Requests",
+            "description": "Operations related to room share requests between students"
         },
         {
             "name": "Search",
