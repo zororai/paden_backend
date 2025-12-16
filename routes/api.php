@@ -122,7 +122,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ✅ Room Share Request Routes
     Route::post('/room-share/send', [RoomShareRequestController::class, 'sendRequest']);
     Route::get('/room-share/sent', [RoomShareRequestController::class, 'getSentRequests']);
-    Route::get('/room-share/received', [RoomShareRequestController::class, 'getReceivedRequests']);
+    Route::get('/room-share/university', [RoomShareRequestController::class, 'getUniversityPosts']);
     Route::put('/room-share/accept/{id}', [RoomShareRequestController::class, 'acceptRequest']);
     Route::put('/room-share/reject/{id}', [RoomShareRequestController::class, 'rejectRequest']);
     Route::delete('/room-share/{id}', [RoomShareRequestController::class, 'deleteRequest']);

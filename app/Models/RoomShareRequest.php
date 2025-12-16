@@ -13,7 +13,11 @@ class RoomShareRequest extends Model
         'sender_id',
         'receiver_id',
         'property_id',
+        'university',
         'message',
+        'preferred_year',
+        'preferred_gender',
+        'rent_sharing_conditions',
         'status',
     ];
 

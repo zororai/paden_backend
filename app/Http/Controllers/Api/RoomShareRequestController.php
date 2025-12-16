@@ -21,24 +21,26 @@ class RoomShareRequestController extends Controller
      * @OA\Post(
      *     path="/api/room-share/send",
      *     tags={"Room Share Requests"},
-     *     summary="Send a room share request to another student",
+     *     summary="Post a room share request to all students at your university",
      *     security={{
      *         "bearerAuth": {}
      *     }},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"receiver_id", "property_id"},
-     *             @OA\Property(property="receiver_id", type="integer", example=2),
+     *             required={"property_id"},
      *             @OA\Property(property="property_id", type="integer", example=5),
-     *             @OA\Property(property="message", type="string", example="Hi, I'm looking for a roommate. Would you like to share a room?")
+     *             @OA\Property(property="message", type="string", example="Hi, I'm looking for a roommate. Would you like to share a room?"),
+     *             @OA\Property(property="preferred_year", type="string", example="2nd Year"),
+     *             @OA\Property(property="preferred_gender", type="string", example="Male"),
+     *             @OA\Property(property="rent_sharing_conditions", type="string", example="50/50 split on rent and utilities")
      *         )
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Request sent successfully",
+     *         description="Request posted successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Room share request sent successfully."),
+     *             @OA\Property(property="message", type="string", example="Room share request posted successfully to all students at your university."),
      *             @OA\Property(property="request", type="object")
      *         )
      *     ),
@@ -55,9 +57,11 @@ class RoomShareRequestController extends Controller
     public function sendRequest(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'receiver_id' => 'required|integer|exists:users,id',
             'property_id' => 'required|integer|exists:properties,id',
             'message' => 'nullable|string|max:1000',
+            'preferred_year' => 'nullable|string|max:50',
+            'preferred_gender' => 'nullable|string|max:20',
+            'rent_sharing_conditions' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -65,39 +69,32 @@ class RoomShareRequestController extends Controller
         }
 
         $senderId = Auth::id();
-        $receiverId = $request->input('receiver_id');
+        $sender = Auth::user();
         $propertyId = $request->input('property_id');
 
-        if ($senderId == $receiverId) {
-            return response()->json(['message' => 'You cannot send a request to yourself.'], 400);
-        }
-
-        $existingRequest = RoomShareRequest::where(function($query) use ($senderId, $receiverId, $propertyId) {
-            $query->where('sender_id', $senderId)
-                  ->where('receiver_id', $receiverId)
-                  ->where('property_id', $propertyId);
-        })->orWhere(function($query) use ($senderId, $receiverId, $propertyId) {
-            $query->where('sender_id', $receiverId)
-                  ->where('receiver_id', $senderId)
-                  ->where('property_id', $propertyId);
-        })->first();
+        $existingRequest = RoomShareRequest::where('sender_id', $senderId)
+            ->where('property_id', $propertyId)
+            ->first();
 
         if ($existingRequest) {
-            return response()->json(['message' => 'A request already exists between you and this user for this property.'], 409);
+            return response()->json(['message' => 'You have already posted a room share request for this property.'], 409);
         }
 
         $roomShareRequest = RoomShareRequest::create([
             'sender_id' => $senderId,
-            'receiver_id' => $receiverId,
             'property_id' => $propertyId,
+            'university' => $sender->university,
             'message' => $request->input('message'),
+            'preferred_year' => $request->input('preferred_year'),
+            'preferred_gender' => $request->input('preferred_gender'),
+            'rent_sharing_conditions' => $request->input('rent_sharing_conditions'),
             'status' => 'pending',
         ]);
 
-        $roomShareRequest->load(['sender', 'receiver', 'property']);
+        $roomShareRequest->load(['sender', 'property']);
 
         return response()->json([
-            'message' => 'Room share request sent successfully.',
+            'message' => 'Room share request posted successfully to all students at your university.',
             'request' => $roomShareRequest
         ], 201);
     }
@@ -125,27 +122,14 @@ class RoomShareRequestController extends Controller
         $userId = Auth::id();
 
         $requests = RoomShareRequest::where('sender_id', $userId)
-            ->with([
-                'receiver' => function($query) {
-                    $query->select('id', 'name', 'surname', 'email', 'university', 'image', 'phone');
-                },
-                'property'
-            ])
+            ->with(['sender', 'property'])
             ->orderBy('created_at', 'desc')
             ->get();
 
         $transformed = $requests->map(function ($request) {
             return [
                 'id' => $request->id,
-                'receiver' => [
-                    'id' => $request->receiver->id,
-                    'name' => $request->receiver->name,
-                    'surname' => $request->receiver->surname,
-                    'email' => $request->receiver->email,
-                    'university' => $request->receiver->university,
-                    'phone' => $request->receiver->phone,
-                    'image' => $request->receiver->image ? asset('storage/' . $request->receiver->image) : null,
-                ],
+                'university' => $request->university,
                 'property' => [
                     'id' => $request->property->id,
                     'title' => $request->property->title,
@@ -154,6 +138,9 @@ class RoomShareRequestController extends Controller
                     'image' => $request->property->pimage ? asset('storage/' . $request->property->pimage) : null,
                 ],
                 'message' => $request->message,
+                'preferred_year' => $request->preferred_year,
+                'preferred_gender' => $request->preferred_gender,
+                'rent_sharing_conditions' => $request->rent_sharing_conditions,
                 'status' => $request->status,
                 'created_at' => $request->created_at,
                 'updated_at' => $request->updated_at,
@@ -161,34 +148,37 @@ class RoomShareRequestController extends Controller
         });
 
         return response()->json([
-            'message' => 'Sent requests retrieved successfully.',
+            'message' => 'Your room share posts retrieved successfully.',
             'requests' => $transformed
         ], 200);
     }
 
     /**
      * @OA\Get(
-     *     path="/api/room-share/received",
+     *     path="/api/room-share/university",
      *     tags={"Room Share Requests"},
-     *     summary="Get all room share requests received by the authenticated user",
+     *     summary="Get all room share posts from students at your university",
      *     security={{
      *         "bearerAuth": {}
      *     }},
      *     @OA\Response(
      *         response=200,
-     *         description="Successfully retrieved received requests",
+     *         description="Successfully retrieved university room share posts",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Received requests retrieved successfully."),
+     *             @OA\Property(property="message", type="string", example="University room share posts retrieved successfully."),
      *             @OA\Property(property="requests", type="array", @OA\Items(type="object"))
      *         )
      *     )
      * )
      */
-    public function getReceivedRequests()
+    public function getUniversityPosts()
     {
         $userId = Auth::id();
+        $user = Auth::user();
 
-        $requests = RoomShareRequest::where('receiver_id', $userId)
+        $requests = RoomShareRequest::where('university', $user->university)
+            ->where('sender_id', '!=', $userId)
+            ->where('status', 'pending')
             ->with([
                 'sender' => function($query) {
                     $query->select('id', 'name', 'surname', 'email', 'university', 'image', 'phone');
@@ -218,6 +208,9 @@ class RoomShareRequestController extends Controller
                     'image' => $request->property->pimage ? asset('storage/' . $request->property->pimage) : null,
                 ],
                 'message' => $request->message,
+                'preferred_year' => $request->preferred_year,
+                'preferred_gender' => $request->preferred_gender,
+                'rent_sharing_conditions' => $request->rent_sharing_conditions,
                 'status' => $request->status,
                 'created_at' => $request->created_at,
                 'updated_at' => $request->updated_at,
@@ -225,7 +218,7 @@ class RoomShareRequestController extends Controller
         });
 
         return response()->json([
-            'message' => 'Received requests retrieved successfully.',
+            'message' => 'University room share posts retrieved successfully.',
             'requests' => $transformed
         ], 200);
     }
