@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('room_share_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sender_id');
-            $table->unsignedBigInteger('receiver_id');
+            $table->unsignedBigInteger('receiver_id')->nullable();
             $table->unsignedBigInteger('property_id');
+            $table->string('university');
             $table->text('message')->nullable();
+            $table->string('preferred_year')->nullable();
+            $table->string('preferred_gender')->nullable();
+            $table->text('rent_sharing_conditions')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 
@@ -24,7 +28,7 @@ return new class extends Migration
             $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             
-            $table->unique(['sender_id', 'receiver_id', 'property_id']);
+            $table->unique(['sender_id', 'property_id']);
         });
     }
 
