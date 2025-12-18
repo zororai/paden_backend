@@ -366,8 +366,47 @@ public function update(Request $request, $id)
     return response()->json(['message' => 'Property updated successfully', 'property' => $property], 200);
 }
 
+/**
+     * @OA\Delete(
+     *     path="/api/properties/{id}",
+     *     tags={"Properties"},
+     *     summary="Soft delete a property",
+     *     security={{
+     *         "bearerAuth": {}
+     *     }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Property ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Property deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Property deleted successfully.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Property not found or unauthorized"
+     *     )
+     * )
+     */
+public function destroy($id)
+{
+    $user = auth()->user()->id;
 
+    $property = Properties::where('id', $id)->where('uid', $user)->first();
 
+    if (!$property) {
+        return response()->json(['message' => 'Property not found or unauthorized'], 404);
+    }
 
+    $property->delete();
+
+    return response()->json(['message' => 'Property deleted successfully.'], 200);
+}
 
 }
