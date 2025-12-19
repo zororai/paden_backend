@@ -1217,6 +1217,10 @@
                                         },
                                         "rating_percentage": {
                                             "type": "number"
+                                        },
+                                        "rating_out_of_5": {
+                                            "description": "Average rating on a 5-star scale",
+                                            "type": "number"
                                         }
                                     },
                                     "type": "object"

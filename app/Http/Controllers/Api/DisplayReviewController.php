@@ -266,7 +266,8 @@ public function getReviewsForProperty($id)
  *             @OA\Property(property="total_reviews", type="integer"),
  *             @OA\Property(property="total_rating", type="number"),
  *             @OA\Property(property="expected_rating", type="number"),
- *             @OA\Property(property="rating_percentage", type="number")
+ *             @OA\Property(property="rating_percentage", type="number"),
+ *             @OA\Property(property="rating_out_of_5", type="number", description="Average rating on a 5-star scale")
  *         )
  *     ),
  *     @OA\Response(
