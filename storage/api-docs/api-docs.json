@@ -2190,6 +2190,50 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Soft delete a property",
+                "operationId": "acabc512dd07a218f8c1a4cf46a922a4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Property deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Property not found or unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/room-share/send": {
@@ -2197,7 +2241,7 @@
                 "tags": [
                     "Room Share Requests"
                 ],
-                "summary": "Send a room share request to another student",
+                "summary": "Post a room share request to all students at your university",
                 "operationId": "aa6fc91078f687db6a66b8396313dce4",
                 "requestBody": {
                     "required": true,
@@ -2205,14 +2249,9 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "receiver_id",
                                     "property_id"
                                 ],
                                 "properties": {
-                                    "receiver_id": {
-                                        "type": "integer",
-                                        "example": 2
-                                    },
                                     "property_id": {
                                         "type": "integer",
                                         "example": 5
@@ -2220,6 +2259,18 @@
                                     "message": {
                                         "type": "string",
                                         "example": "Hi, I'm looking for a roommate. Would you like to share a room?"
+                                    },
+                                    "preferred_year": {
+                                        "type": "string",
+                                        "example": "2nd Year"
+                                    },
+                                    "preferred_gender": {
+                                        "type": "string",
+                                        "example": "Male"
+                                    },
+                                    "rent_sharing_conditions": {
+                                        "type": "string",
+                                        "example": "50/50 split on rent and utilities"
                                     }
                                 },
                                 "type": "object"
@@ -2229,14 +2280,14 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Request sent successfully",
+                        "description": "Request posted successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Room share request sent successfully."
+                                            "example": "Room share request posted successfully to all students at your university."
                                         },
                                         "request": {
                                             "type": "object"
@@ -2299,23 +2350,23 @@
                 ]
             }
         },
-        "/api/room-share/received": {
+        "/api/room-share/university": {
             "get": {
                 "tags": [
                     "Room Share Requests"
                 ],
-                "summary": "Get all room share requests received by the authenticated user",
-                "operationId": "26cf1b2b62c333dd702bf8772b33f686",
+                "summary": "Get all room share posts from students at your university",
+                "operationId": "d69fb82c94995500715875433a9e815b",
                 "responses": {
                     "200": {
-                        "description": "Successfully retrieved received requests",
+                        "description": "Successfully retrieved university room share posts",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Received requests retrieved successfully."
+                                            "example": "University room share posts retrieved successfully."
                                         },
                                         "requests": {
                                             "type": "array",
