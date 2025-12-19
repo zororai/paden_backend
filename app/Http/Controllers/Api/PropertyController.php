@@ -269,6 +269,7 @@ public function myProperties()
      *             @OA\Property(property="location", type="string"),
      *             @OA\Property(property="discription", type="string"),
      *             @OA\Property(property="number", type="integer"),
+     *             @OA\Property(property="roomnumber", type="integer"),
      *             @OA\Property(property="price", type="number", format="float"),
      *             @OA\Property(property="room", type="string", format="binary"),
      *             @OA\Property(property="Kitchen", type="string", format="binary"),
@@ -315,9 +316,12 @@ public function update(Request $request, $id)
         'location' => 'sometimes|string|max:255',
         'discription' => 'sometimes|string',
         'number' => 'sometimes|numeric',
+        'roomnumber' => 'sometimes|numeric',
         'price' => 'sometimes|numeric',
         'room' => 'sometimes|image',
-        // Add other fields you want to allow updating
+        'Kitchen' => 'sometimes|image',
+        'Toilet' => 'sometimes|image',
+        'out' => 'sometimes|image',
     ]);
 
     if ($validatedData->fails()) {
@@ -329,6 +333,7 @@ public function update(Request $request, $id)
     $property->pcontent = $request->input('discription', $property->pcontent);
     $property->mapimage = $request->input('number', $property->mapimage);
     $property->price = $request->input('price', $property->price);
+    $property->floor  = $request->input('roomnumber', $property->floor);
 
     // If a new image is uploaded, replace the old one
     if ($request->hasFile('room')) {
