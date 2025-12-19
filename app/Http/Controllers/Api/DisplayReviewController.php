@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Review; // Ensure the correct model is imported
+use App\Models\Review;
+use App\Models\Properties;
 use Illuminate\Http\Request;
 /**
  * @OA\Schema(
@@ -238,5 +239,67 @@ public function getReviewsForProperty($id)
     return response()->json($reviews, 200);
 }
 
+/**
+ * @OA\Get(
+ *     path="/api/property/{id}/rating-summary",
+ *     tags={"Property-Rating"},
+ *     summary="Get property rating summary with property details",
+ *     security={{
+ *         "bearerAuth": {}
+ *     }},
+ *     description="Calculate the total rating score and return property info (image, price, location).",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="The ID of the property",
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successfully retrieved rating summary",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="image", type="string"),
+ *             @OA\Property(property="price", type="number"),
+ *             @OA\Property(property="location", type="string"),
+ *             @OA\Property(property="total_reviews", type="integer"),
+ *             @OA\Property(property="total_rating", type="number"),
+ *             @OA\Property(property="expected_rating", type="number"),
+ *             @OA\Property(property="rating_percentage", type="number")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Property not found"
+ *     )
+ * )
+ */
+public function getRatingSummary($id)
+{
+    $property = Properties::find($id);
+
+    if (!$property) {
+        return response()->json(['error' => 'Property not found'], 404);
+    }
+
+    $reviews = Review::where('properties_id', $id)->get();
+    $totalReviews = $reviews->count();
+    $totalRating = $reviews->sum('Rating');
+    $expectedRating = 5 * $totalReviews;
+    $ratingPercentage = $totalReviews > 0 ? round(($totalRating / $expectedRating) * 100, 2) : 0;
+    $ratingOutOf5 = $totalReviews > 0 ? round($totalRating / $totalReviews, 2) : 0;
+
+    return response()->json([
+        'image' => asset('storage/' . $property->pimage),
+        'price' => $property->price,
+        'location' => $property->title,
+        'total_reviews' => $totalReviews,
+        'total_rating' => $totalRating,
+        'expected_rating' => $expectedRating,
+        'rating_percentage' => $ratingPercentage,
+        'rating_out_of_5' => $ratingOutOf5,
+    ], 200);
+}
 
 }

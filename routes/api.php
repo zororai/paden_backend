@@ -93,6 +93,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('reviews/delete/{reviewId}', [DisplayReviewController::class, 'deleteReviewById'])->name('reviews.delete.id');
     Route::post('reviews/store', [DisplayReviewController::class, 'storeReviews'])->name('reviews.store');
     Route::get('property/{id}/reviews', [DisplayReviewController::class, 'getReviewsForProperty'])->name('property.reviews');
+    Route::get('property/{id}/rating-summary', [DisplayReviewController::class, 'getRatingSummary']);
 
 
     // Home

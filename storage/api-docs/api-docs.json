@@ -1171,6 +1171,70 @@
                 ]
             }
         },
+        "/api/property/{id}/rating-summary": {
+            "get": {
+                "tags": [
+                    "Property-Rating"
+                ],
+                "summary": "Get property rating summary with property details",
+                "description": "Calculate the total rating score and return property info (image, price, location).",
+                "operationId": "41aaeba186998a38e3cd8df936cb0e4e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the property",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved rating summary",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "image": {
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "type": "number"
+                                        },
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "total_reviews": {
+                                            "type": "integer"
+                                        },
+                                        "total_rating": {
+                                            "type": "number"
+                                        },
+                                        "expected_rating": {
+                                            "type": "number"
+                                        },
+                                        "rating_percentage": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/home": {
             "get": {
                 "tags": [
@@ -3339,6 +3403,10 @@
         {
             "name": "View-property-review",
             "description": "View-property-review"
+        },
+        {
+            "name": "Property-Rating",
+            "description": "Property-Rating"
         },
         {
             "name": "Home",
