@@ -372,6 +372,66 @@ public function update(Request $request, $id)
 }
 
 /**
+     * @OA\Patch(
+     *     path="/api/properties/{id}/roomnumber",
+     *     tags={"Properties"},
+     *     summary="Update property room number",
+     *     security={{
+     *         "bearerAuth": {}
+     *     }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="Property ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"roomnumber"},
+     *             @OA\Property(property="roomnumber", type="integer", example=3)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Room number updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Room number updated successfully."),
+     *             @OA\Property(property="property", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Property not found or unauthorized"
+     *     )
+     * )
+     */
+public function updateRoomNumber(Request $request, $id)
+{
+    $user = auth()->user()->id;
+
+    $property = Properties::where('id', $id)->where('uid', $user)->first();
+
+    if (!$property) {
+        return response()->json(['message' => 'Property not found or unauthorized'], 404);
+    }
+
+    $validated = Validator::make($request->all(), [
+        'roomnumber' => 'required|numeric',
+    ]);
+
+    if ($validated->fails()) {
+        return response()->json($validated->errors(), 400);
+    }
+
+    $property->floor = $request->input('roomnumber');
+    $property->save();
+
+    return response()->json(['message' => 'Room number updated successfully.', 'property' => $property], 200);
+}
+
+/**
      * @OA\Delete(
      *     path="/api/properties/{id}",
      *     tags={"Properties"},

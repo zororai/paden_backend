@@ -82,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/myproperties', [PropertyController::class, 'myProperties']);
     Route::put('/properties/{id}', [PropertyController::class, 'update']);
     Route::delete('/properties/{id}', [PropertyController::class, 'destroy']);
+    Route::patch('/properties/{id}/roomnumber', [PropertyController::class, 'updateRoomNumber']);
     Route::put('/properties/update-landlord-agent/{id}/', [PropertyController::class, 'updateLandlordAgent']);
     Route::get('/home/popular', [HomeController::class, 'getPopularPropertyIds']);
         Route::get('home/gethome', [HomeController::class, 'gethome']);

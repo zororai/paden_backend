@@ -2129,6 +2129,9 @@
                                     "number": {
                                         "type": "integer"
                                     },
+                                    "roomnumber": {
+                                        "type": "integer"
+                                    },
                                     "price": {
                                         "type": "number",
                                         "format": "float"
@@ -2218,6 +2221,74 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Property deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Property not found or unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/properties/{id}/roomnumber": {
+            "patch": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Update property room number",
+                "operationId": "0a6b21e0d5173b2e16bf9dfad0a2772c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Property ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomnumber"
+                                ],
+                                "properties": {
+                                    "roomnumber": {
+                                        "type": "integer",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room number updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Room number updated successfully."
+                                        },
+                                        "property": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
