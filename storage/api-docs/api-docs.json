@@ -2335,8 +2335,8 @@
                                 ],
                                 "properties": {
                                     "roomnumber": {
-                                        "type": "integer",
-                                        "example": 3
+                                        "type": "string",
+                                        "example": "3"
                                     }
                                 },
                                 "type": "object"

@@ -229,7 +229,7 @@ public function myProperties()
         return [
             'id' => $property->id,
             'name' => $property->isFeatured,
-            'location' => $property->title,
+            
             'price' => $property->price,
             'like' => $property->like,
             'Fridge' => $property->bedroom,
@@ -390,7 +390,7 @@ public function update(Request $request, $id)
      *         required=true,
      *         @OA\JsonContent(
      *             required={"roomnumber"},
-     *             @OA\Property(property="roomnumber", type="integer", example=3)
+     *             @OA\Property(property="roomnumber", type="string", example="string")
      *         )
      *     ),
      *     @OA\Response(
@@ -418,7 +418,7 @@ public function updateRoomNumber(Request $request, $id)
     }
 
     $validated = Validator::make($request->all(), [
-        'roomnumber' => 'required|numeric',
+        'roomnumber' => 'required|string',
     ]);
 
     if ($validated->fails()) {
