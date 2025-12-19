@@ -295,4 +295,68 @@ class ChatController extends Controller
             'message' => 'Messages marked as read'
         ], 200);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/chat/received",
+     *     tags={"Chat"},
+     *     summary="Get all received messages",
+     *     description="Get all messages received by the authenticated user",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Messages retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="sender_id", type="integer"),
+     *                     @OA\Property(property="receiver_id", type="integer"),
+     *                     @OA\Property(property="message", type="string"),
+     *                     @OA\Property(property="is_read", type="boolean"),
+     *                     @OA\Property(property="created_at", type="string"),
+     *                     @OA\Property(property="updated_at", type="string"),
+     *                     @OA\Property(property="sender", type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="name", type="string"),
+     *                         @OA\Property(property="image", type="string")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
+    public function getReceivedMessages()
+    {
+        $authUser = auth()->user();
+
+        $messages = Message::where('receiver_id', $authUser->id)
+            ->with('sender:id,name,image')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($message) {
+                return [
+                    'id' => $message->id,
+                    'sender_id' => $message->sender_id,
+                    'receiver_id' => $message->receiver_id,
+                    'message' => $message->message,
+                    'is_read' => $message->is_read,
+                    'created_at' => $message->created_at->toISOString(),
+                    'updated_at' => $message->updated_at->toISOString(),
+                    'sender' => $message->sender ? [
+                        'id' => $message->sender->id,
+                        'name' => $message->sender->name,
+                        'image' => asset('storage/' . $message->sender->image),
+                    ] : null,
+                ];
+            });
+
+        return response()->json([
+            'status' => true,
+            'data' => $messages
+        ], 200);
+    }
 }

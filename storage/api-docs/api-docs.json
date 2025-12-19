@@ -666,6 +666,85 @@
                 ]
             }
         },
+        "/api/chat/received": {
+            "get": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Get all received messages",
+                "description": "Get all messages received by the authenticated user",
+                "operationId": "c8e06854cf9b4b630a86df33ff1bf515",
+                "responses": {
+                    "200": {
+                        "description": "Messages retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "sender_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "receiver_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "message": {
+                                                        "type": "string"
+                                                    },
+                                                    "is_read": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "sender": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            },
+                                                            "image": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/properties/directions/{id}": {
             "get": {
                 "tags": [
@@ -2336,7 +2415,7 @@
                                 "properties": {
                                     "roomnumber": {
                                         "type": "string",
-                                        "example": "3"
+                                        "example": "string"
                                     }
                                 },
                                 "type": "object"
