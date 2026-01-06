@@ -42,14 +42,15 @@ class RegisterController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name", "surname", "email", "password", "password_confirmation", "university", "type", "phone", "role"},
+     *             required={"name", "surname", "password", "password_confirmation", "university", "type", "phone", "role"},
      *             @OA\Property(property="name", type="string", example="John"),
      *             @OA\Property(property="surname", type="string", example="Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
      *             @OA\Property(property="password", type="string", format="password", example="password123"),
      *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
      *             @OA\Property(property="university", type="string", example="Rose of Sharon University"),
-     *             @OA\Property(property="role", type="string", example="user")
+     *             @OA\Property(property="role", type="string", example="user"),
+     *             @OA\Property(property="phone", type="string", example="+263771234567")
      *         )
      *     ),
      *     @OA\Response(
@@ -70,10 +71,11 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name'       => 'required|string|max:255',
             'surname'    => 'required|string|max:255',
-            'email'      => 'required|string|email|max:255|unique:users',
+            'email'      => 'nullable|string|email|max:255|unique:users',
             'university' => 'required|string|max:255',
             'password'   => 'required|string|min:6|confirmed',
             'role'       => 'required|string|max:255',
+            'phone'      => 'required|string|max:20|unique:users',
         ],[
             'email.unique' => 'This email address is already registered.',
             'password.confirmed' => 'Passwords do not match.'
@@ -93,7 +95,7 @@ class RegisterController extends Controller
             'university' => $request->university,
             'type'       => $image,
             'image'      => $image,
-            'phone'      => $image,
+            'phone'      => $request->phone,
             'password'   => Hash::make($request->password),
             'role'       => $request->role,
         ]);

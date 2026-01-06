@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Api\HomeController;
 use App\Models\User;
-use App\Models\EmailVerificationCode;
-use App\Notifications\EmailVerificationNotification;
 /**
  * @OA\Post(
  *     path="/api/login",
@@ -19,8 +17,9 @@ use App\Notifications\EmailVerificationNotification;
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"email", "password"},
+ *             required={"password"},
  *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+ *             @OA\Property(property="phone", type="string", example="+263771234567"),
  *             @OA\Property(property="password", type="string", format="password", example="password123")
  *         )
  *     ),
@@ -54,35 +53,23 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email'    => 'required_without:phone|email',
+            'phone'    => 'required_without:email|string',
             'password' => 'required|string|min:6',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        // Find user by email or phone
+        if ($request->email) {
+            $user = User::where('email', $request->email)->first();
+        } else {
+            $user = User::where('phone', $request->phone)->first();
+        }
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid email or password.',
             ], 401);
-        }
-
-        // Check if email is verified (bypass for admin users)
-        if (is_null($user->email_verified_at) && $user->role !== 'admin') {
-            // Generate and send verification code
-            $verificationCode = EmailVerificationCode::createForEmail($user->email);
-            $user->notify(new EmailVerificationNotification($verificationCode->code));
-
-            // Generate token for the user to use with verification endpoints
-            $token = $user->createToken('api-token')->plainTextToken;
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Your email is not verified. A verification code has been sent to your email address.',
-                'requires_verification' => true,
-                'token' => $token,
-                'email' => $user->email
-            ], 403);
         }
 
         // Generate token
