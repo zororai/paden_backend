@@ -119,31 +119,53 @@
                 "tags": [
                     "Userlogin"
                 ],
-                "summary": "User Login",
-                "description": "Logs in a user and returns user details and redirect URL",
+                "summary": "User Login (Email or Phone)",
+                "description": "Login using either email OR phone with password",
                 "operationId": "d41c2ea50a8fe40296a4130751e9800f",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john@example.com"
+                                "oneOf": [
+                                    {
+                                        "required": [
+                                            "email",
+                                            "password"
+                                        ],
+                                        "properties": {
+                                            "email": {
+                                                "type": "string",
+                                                "format": "email",
+                                                "example": "john@example.com"
+                                            },
+                                            "password": {
+                                                "type": "string",
+                                                "format": "password",
+                                                "example": "password123"
+                                            }
+                                        },
+                                        "type": "object"
                                     },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
+                                    {
+                                        "required": [
+                                            "phone",
+                                            "password"
+                                        ],
+                                        "properties": {
+                                            "phone": {
+                                                "type": "string",
+                                                "example": "+263771234567"
+                                            },
+                                            "password": {
+                                                "type": "string",
+                                                "format": "password",
+                                                "example": "password123"
+                                            }
+                                        },
+                                        "type": "object"
                                     }
-                                },
-                                "type": "object"
+                                ]
                             }
                         }
                     }
@@ -155,6 +177,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Login successful"
@@ -162,29 +188,38 @@
                                         "user": {
                                             "properties": {
                                                 "id": {
-                                                    "type": "integer"
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
                                                 "name": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com",
+                                                    "nullable": true
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "+263771234567",
+                                                    "nullable": true
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "teacher"
                                                 },
                                                 "image": {
                                                     "type": "string",
-                                                    "format": "url",
-                                                    "example": "http://yourdomain.com/storage/properties/room.jpg"
-                                                },
-                                                "email": {
-                                                    "type": "string"
+                                                    "example": "https://yourdomain.com/storage/avatar.jpg",
+                                                    "nullable": true
                                                 }
                                             },
                                             "type": "object"
                                         },
-                                        "redirect_url": {
-                                            "type": "string",
-                                            "example": "http://your-app-url/home"
-                                        },
                                         "token": {
                                             "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+                                            "example": "1|XyZabc123..."
                                         }
                                     },
                                     "type": "object"
@@ -198,6 +233,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "Invalid credentials"
@@ -313,7 +352,6 @@
                                 "required": [
                                     "name",
                                     "surname",
-                                    "email",
                                     "password",
                                     "password_confirmation",
                                     "university",
@@ -352,6 +390,10 @@
                                     "role": {
                                         "type": "string",
                                         "example": "user"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+263771234567"
                                     }
                                 },
                                 "type": "object"
@@ -1316,6 +1358,678 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/admin/general/properties": {
+            "get": {
+                "tags": [
+                    "General Housing Admin"
+                ],
+                "summary": "Get all general housing properties (admin)",
+                "operationId": "3f57a6987ffa4a5dfd87b6bbbfc8dc78",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all properties"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/general/users": {
+            "get": {
+                "tags": [
+                    "General Housing Admin"
+                ],
+                "summary": "Get all general housing users (admin)",
+                "operationId": "5ed9260f02d13cb32c0a02302a8385b6",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Filter by role (tenant, landlord)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/general/property/{id}/status": {
+            "patch": {
+                "tags": [
+                    "General Housing Admin"
+                ],
+                "summary": "Update property status (approve/suspend)",
+                "operationId": "4498e979f810946f415de1a9abc1d3e0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Available",
+                                            "Suspended",
+                                            "Pending"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status updated"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/enquiries": {
+            "post": {
+                "tags": [
+                    "General Housing Enquiries"
+                ],
+                "summary": "Send an enquiry to a landlord about a property",
+                "operationId": "7a20920b9aea2a7ff6b1e5e6c45f1d89",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "property_id",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Hi, I'm interested in this property. Is it still available?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Enquiry sent successfully"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/landlord/profile/status": {
+            "get": {
+                "tags": [
+                    "General Housing Landlord"
+                ],
+                "summary": "Get landlord profile completion status",
+                "operationId": "2948af0088bd07216458941b63c1935a",
+                "responses": {
+                    "200": {
+                        "description": "Profile status"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/landlord/profile": {
+            "post": {
+                "tags": [
+                    "General Housing Landlord"
+                ],
+                "summary": "Complete or update landlord profile",
+                "operationId": "d8d739e961cf517285c2e91bd95746e2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "full_name",
+                                    "phone",
+                                    "preferred_contact"
+                                ],
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+263771234567"
+                                    },
+                                    "preferred_contact": {
+                                        "type": "string",
+                                        "example": "phone"
+                                    },
+                                    "whatsapp_enabled": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/landlord/properties": {
+            "get": {
+                "tags": [
+                    "General Housing Landlord"
+                ],
+                "summary": "Get landlord's own properties",
+                "operationId": "5764f6c45352395a71b221a9f2e5ce32",
+                "responses": {
+                    "200": {
+                        "description": "List of landlord's properties"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "General Housing Landlord"
+                ],
+                "summary": "Create a new property listing",
+                "operationId": "047ed286a528cfb4cff052d82c77530b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "price",
+                                    "location",
+                                    "property_type"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "property_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "room",
+                                            "cottage",
+                                            "flat",
+                                            "house"
+                                        ]
+                                    },
+                                    "amenities": {
+                                        "type": "string"
+                                    },
+                                    "bedrooms": {
+                                        "type": "integer"
+                                    },
+                                    "bathrooms": {
+                                        "type": "integer"
+                                    },
+                                    "size": {
+                                        "type": "string"
+                                    },
+                                    "main_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "kitchen_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "bathroom_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "outside_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Property created successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/landlord/properties/{id}": {
+            "put": {
+                "tags": [
+                    "General Housing Landlord"
+                ],
+                "summary": "Update a property listing",
+                "operationId": "998d9f1616e7da5349a3e127f7daff44",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "location": {
+                                        "type": "string"
+                                    },
+                                    "property_type": {
+                                        "type": "string"
+                                    },
+                                    "amenities": {
+                                        "type": "string"
+                                    },
+                                    "availability_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "active",
+                                            "inactive"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Property updated"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "General Housing Landlord"
+                ],
+                "summary": "Delete a property listing",
+                "operationId": "8260f13d38df4c7aff3ecfe6acc641d3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property deleted"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/notifications": {
+            "get": {
+                "tags": [
+                    "General Housing Notifications"
+                ],
+                "summary": "Get user notifications",
+                "operationId": "c5850c6684d7a062be1fc0ea040d398a",
+                "responses": {
+                    "200": {
+                        "description": "List of notifications"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/notifications/mark-read": {
+            "post": {
+                "tags": [
+                    "General Housing Notifications"
+                ],
+                "summary": "Mark all notifications as read",
+                "operationId": "09172f745aebc0691e8f2b30d6fe1e2b",
+                "responses": {
+                    "200": {
+                        "description": "Notifications marked as read"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/properties": {
+            "get": {
+                "tags": [
+                    "General Housing Properties"
+                ],
+                "summary": "Get all active general housing properties",
+                "operationId": "ea29a5b176d2513cb14ca106b63fde29",
+                "parameters": [
+                    {
+                        "name": "location",
+                        "in": "query",
+                        "description": "Filter by location",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "description": "Minimum price filter",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Maximum price filter",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "property_type",
+                        "in": "query",
+                        "description": "Filter by property type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "room",
+                                "cottage",
+                                "flat",
+                                "house"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of properties"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/general/properties/{id}": {
+            "get": {
+                "tags": [
+                    "General Housing Properties"
+                ],
+                "summary": "Get a single property details",
+                "operationId": "739b32fff615cc973ffccc7e737506b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Property details"
+                    },
+                    "404": {
+                        "description": "Property not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/register/general": {
+            "post": {
+                "tags": [
+                    "General Housing Registration"
+                ],
+                "summary": "Register a new general housing user",
+                "description": "Registers a new tenant or landlord for general housing",
+                "operationId": "03453d40e9b058944d11b226513527b3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "password",
+                                    "password_confirmation",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+263771234567"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "tenant",
+                                            "landlord"
+                                        ],
+                                        "example": "tenant"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User successfully registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registration successful"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
             }
         },
         "/api/home": {
@@ -3434,6 +4148,30 @@
         {
             "name": "Payments",
             "description": "Paynow Mobile Payments for Directions"
+        },
+        {
+            "name": "General Housing Admin",
+            "description": "Admin endpoints for general housing management"
+        },
+        {
+            "name": "General Housing Enquiries",
+            "description": "Tenant enquiry endpoints for contacting landlords"
+        },
+        {
+            "name": "General Housing Landlord",
+            "description": "Landlord profile and property management endpoints"
+        },
+        {
+            "name": "General Housing Notifications",
+            "description": "Notification endpoints for general housing users"
+        },
+        {
+            "name": "General Housing Properties",
+            "description": "Property browsing endpoints for general housing tenants"
+        },
+        {
+            "name": "General Housing Registration",
+            "description": "Registration endpoints for general housing users"
         },
         {
             "name": "Properties",

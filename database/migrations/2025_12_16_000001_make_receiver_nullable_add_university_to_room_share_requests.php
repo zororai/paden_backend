@@ -12,17 +12,61 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Drop foreign key and unique constraint using raw SQL for MySQL compatibility
-        DB::statement('ALTER TABLE room_share_requests DROP FOREIGN KEY room_share_requests_receiver_id_foreign');
-        DB::statement('ALTER TABLE room_share_requests DROP INDEX room_share_requests_sender_id_receiver_id_property_id_unique');
+        $senderFkExists = DB::select("
+            SELECT CONSTRAINT_NAME 
+            FROM information_schema.TABLE_CONSTRAINTS 
+            WHERE TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'room_share_requests' 
+            AND CONSTRAINT_NAME = 'room_share_requests_sender_id_foreign'
+        ");
+        
+        if (!empty($senderFkExists)) {
+            DB::statement('ALTER TABLE room_share_requests DROP FOREIGN KEY room_share_requests_sender_id_foreign');
+        }
+        
+        $propertyFkExists = DB::select("
+            SELECT CONSTRAINT_NAME 
+            FROM information_schema.TABLE_CONSTRAINTS 
+            WHERE TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'room_share_requests' 
+            AND CONSTRAINT_NAME = 'room_share_requests_property_id_foreign'
+        ");
+        
+        if (!empty($propertyFkExists)) {
+            DB::statement('ALTER TABLE room_share_requests DROP FOREIGN KEY room_share_requests_property_id_foreign');
+        }
+        
+        $uniqueExists = DB::select("
+            SELECT INDEX_NAME 
+            FROM information_schema.STATISTICS 
+            WHERE TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'room_share_requests' 
+            AND INDEX_NAME = 'room_share_requests_sender_id_receiver_id_property_id_unique'
+        ");
+        
+        if (!empty($uniqueExists)) {
+            DB::statement('ALTER TABLE room_share_requests DROP INDEX room_share_requests_sender_id_receiver_id_property_id_unique');
+        }
 
-        Schema::table('room_share_requests', function (Blueprint $table) {
+        $universityExists = DB::select("
+            SELECT COLUMN_NAME 
+            FROM information_schema.COLUMNS 
+            WHERE TABLE_SCHEMA = DATABASE() 
+            AND TABLE_NAME = 'room_share_requests' 
+            AND COLUMN_NAME = 'university'
+        ");
+
+        Schema::table('room_share_requests', function (Blueprint $table) use ($universityExists) {
             $table->unsignedBigInteger('receiver_id')->nullable()->change();
-            $table->string('university')->after('property_id');
+            if (empty($universityExists)) {
+                $table->string('university')->after('property_id');
+            }
         });
 
         Schema::table('room_share_requests', function (Blueprint $table) {
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->unique(['sender_id', 'property_id']);
         });
     }
