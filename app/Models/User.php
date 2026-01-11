@@ -30,6 +30,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'admin_access',
         'permissions',
+        'housing_context',
+        'profile_complete',
+        'preferred_contact',
+        'whatsapp_enabled',
     ];
 
   //public function likes()
@@ -71,6 +75,8 @@ public function receivedRoomShareRequests()
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'permissions' => 'array',
+        'profile_complete' => 'boolean',
+        'whatsapp_enabled' => 'boolean',
     ];
 
     /**

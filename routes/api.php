@@ -24,6 +24,14 @@ use App\Http\Controllers\Api\Auth\{
     SocialAuthController,
     EmailVerificationController
 };
+use App\Http\Controllers\Api\General\{
+    GeneralRegisterController,
+    GeneralPropertyController,
+    GeneralLandlordController,
+    GeneralEnquiryController,
+    GeneralNotificationController,
+    GeneralAdminController
+};
 use Laravel\Socialite\Facades\Socialite;
 
 /*
@@ -133,6 +141,46 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/room-share/student/{id}', [RoomShareRequestController::class, 'getStudentProfile']);
     Route::get('/room-share/students', [RoomShareRequestController::class, 'getStudents']);
 
+});
+
+/*
+|--------------------------------------------------------------------------
+| General Housing Routes
+|--------------------------------------------------------------------------
+*/
+
+// ✅ General Housing Registration (Public)
+Route::post('/register/general', [GeneralRegisterController::class, 'register']);
+
+// ✅ General Housing - Tenant Routes
+Route::middleware(['auth:sanctum', 'role:tenant', 'housing.context:general'])->prefix('general')->group(function () {
+    Route::get('/properties', [GeneralPropertyController::class, 'index']);
+    Route::get('/properties/{id}', [GeneralPropertyController::class, 'show']);
+    Route::post('/enquiries', [GeneralEnquiryController::class, 'store']);
+    Route::get('/notifications', [GeneralNotificationController::class, 'index']);
+    Route::post('/notifications/mark-read', [GeneralNotificationController::class, 'markAllRead']);
+});
+
+// ✅ General Housing - Landlord Routes
+Route::middleware(['auth:sanctum', 'role:landlord', 'housing.context:general'])->prefix('general/landlord')->group(function () {
+    // Profile routes (no profile completion required)
+    Route::get('/profile/status', [GeneralLandlordController::class, 'profileStatus']);
+    Route::post('/profile', [GeneralLandlordController::class, 'updateProfile']);
+    
+    // Property routes (profile completion required)
+    Route::middleware('profile.complete')->group(function () {
+        Route::get('/properties', [GeneralLandlordController::class, 'getProperties']);
+        Route::post('/properties', [GeneralLandlordController::class, 'store']);
+        Route::put('/properties/{id}', [GeneralLandlordController::class, 'update']);
+        Route::delete('/properties/{id}', [GeneralLandlordController::class, 'destroy']);
+    });
+});
+
+// ✅ General Housing - Admin Routes
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin/general')->group(function () {
+    Route::get('/properties', [GeneralAdminController::class, 'getProperties']);
+    Route::get('/users', [GeneralAdminController::class, 'getUsers']);
+    Route::patch('/property/{id}/status', [GeneralAdminController::class, 'updatePropertyStatus']);
 });
 
 
