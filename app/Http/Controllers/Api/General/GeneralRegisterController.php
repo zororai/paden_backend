@@ -27,6 +27,7 @@ class GeneralRegisterController extends Controller
      *         @OA\JsonContent(
      *             required={"name", "password", "password_confirmation", "role"},
      *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="surname", type="string", example="Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
      *             @OA\Property(property="phone", type="string", example="+263771234567"),
      *             @OA\Property(property="password", type="string", format="password", example="password123"),
@@ -51,6 +52,7 @@ class GeneralRegisterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
+            'surname'  => 'nullable|string|max:255',
             'email'    => 'nullable|string|email|max:255|unique:users',
             'phone'    => 'required_without:email|string|max:20|unique:users',
             'password' => 'required|string|min:6|confirmed',
@@ -71,6 +73,7 @@ class GeneralRegisterController extends Controller
 
         $user = User::create([
             'name'            => $request->name,
+            'surname'         => $request->surname,
             'email'           => $request->email,
             'phone'           => $request->phone,
             'password'        => Hash::make($request->password),

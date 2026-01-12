@@ -1966,6 +1966,10 @@
                                         "type": "string",
                                         "example": "John Doe"
                                     },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
