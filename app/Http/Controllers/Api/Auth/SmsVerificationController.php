@@ -54,7 +54,10 @@ class SmsVerificationController extends Controller
             ], 422);
         }
 
-        $user = User::where('phone', $request->phone)->first();
+        // Format phone number to international format FIRST
+        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
+
+        $user = User::where('phone', $formattedPhone)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -62,9 +65,6 @@ class SmsVerificationController extends Controller
                 'message' => 'Invalid credentials',
             ], 401);
         }
-
-        // Format phone number to international format
-        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
 
         $verificationCode = VerificationCode::createForPhone($formattedPhone);
 
@@ -128,7 +128,10 @@ class SmsVerificationController extends Controller
             ], 422);
         }
 
-        $verificationCode = VerificationCode::where('phone', $request->phone)
+        // Format phone number to match stored format
+        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
+
+        $verificationCode = VerificationCode::where('phone', $formattedPhone)
             ->where('code', $request->code)
             ->where('verified', false)
             ->first();
@@ -149,7 +152,7 @@ class SmsVerificationController extends Controller
 
         $verificationCode->update(['verified' => true]);
 
-        $user = User::where('phone', $request->phone)->first();
+        $user = User::where('phone', $formattedPhone)->first();
 
         if (!$user) {
             return response()->json([
@@ -229,7 +232,10 @@ class SmsVerificationController extends Controller
             ], 422);
         }
 
-        $user = User::where('phone', $request->phone)->first();
+        // Format phone number to international format FIRST
+        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
+
+        $user = User::where('phone', $formattedPhone)->first();
 
         if (!$user) {
             return response()->json([
@@ -237,9 +243,6 @@ class SmsVerificationController extends Controller
                 'message' => 'Phone number not found',
             ], 404);
         }
-
-        // Format phone number to international format
-        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
 
         $verificationCode = VerificationCode::createForPhone($formattedPhone);
 
