@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\VerificationCode;
 use App\Models\UserDevice;
-use App\Services\SmsService;
+use App\Helpers\SmsHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -19,12 +19,6 @@ use Illuminate\Support\Facades\Validator;
  */
 class SmsVerificationController extends Controller
 {
-    protected $smsService;
-
-    public function __construct(SmsService $smsService)
-    {
-        $this->smsService = $smsService;
-    }
 
     /**
      * @OA\Post(
@@ -69,10 +63,13 @@ class SmsVerificationController extends Controller
             ], 401);
         }
 
-        $verificationCode = VerificationCode::createForPhone($request->phone);
+        // Format phone number to international format
+        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
 
-        $smsResult = $this->smsService->sendVerificationCode(
-            $request->phone,
+        $verificationCode = VerificationCode::createForPhone($formattedPhone);
+
+        $smsResult = SmsHelper::sendVerificationCode(
+            $formattedPhone,
             $verificationCode->code
         );
 
@@ -80,6 +77,7 @@ class SmsVerificationController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'Failed to send verification code. Please try again.',
+                'error' => $smsResult['message'] ?? 'Unknown error',
             ], 500);
         }
 
@@ -240,10 +238,13 @@ class SmsVerificationController extends Controller
             ], 404);
         }
 
-        $verificationCode = VerificationCode::createForPhone($request->phone);
+        // Format phone number to international format
+        $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
 
-        $smsResult = $this->smsService->sendVerificationCode(
-            $request->phone,
+        $verificationCode = VerificationCode::createForPhone($formattedPhone);
+
+        $smsResult = SmsHelper::sendVerificationCode(
+            $formattedPhone,
             $verificationCode->code
         );
 
@@ -251,6 +252,7 @@ class SmsVerificationController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'Failed to send verification code. Please try again.',
+                'error' => $smsResult['message'] ?? 'Unknown error',
             ], 500);
         }
 
