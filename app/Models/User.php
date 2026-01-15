@@ -56,6 +56,11 @@ public function receivedRoomShareRequests()
     return $this->hasMany(RoomShareRequest::class, 'receiver_id');
 }
 
+public function devices()
+{
+    return $this->hasMany(UserDevice::class);
+}
+
     /**
      * The attributes that should be hidden for serialization.
      *

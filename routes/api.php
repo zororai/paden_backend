@@ -46,10 +46,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // ✅ Auth Routes
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:10,1');
 Route::post('/useregister', [RegisterController::class, 'register']);
 Route::post('password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [PasswordResetController::class, 'reset']);
+
+// ✅ Device-based Auth Routes (protected)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [LoginController::class, 'me']);
+    Route::post('/logout', [LoginController::class, 'logout']);
+    Route::post('/logout-all', [LoginController::class, 'logoutAll']);
+    Route::get('/devices', [LoginController::class, 'devices']);
+    Route::delete('/devices/{deviceId}', [LoginController::class, 'logoutDevice']);
+});
 
 // ✅ Email Verification Routes (require authentication)
 Route::middleware('auth:sanctum')->group(function () {
