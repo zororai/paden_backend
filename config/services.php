@@ -37,4 +37,11 @@ return [
     'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'inboxiq' => [
+        'url' => env('INBOXIQ_URL', 'https://api.inboxiq.co.zw/api/v1/send-sms'),
+        'username' => env('INBOXIQ_USERNAME'),
+        'password' => env('INBOXIQ_PASSWORD'),
+        'api_key' => env('INBOXIQ_API_KEY'),
+    ],
+
 ];

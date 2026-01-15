@@ -29,6 +29,8 @@ class Properties extends Model
         'price',
         'location',
         'city',
+        'latitude',
+        'longitude',
         'state',
         'feature',
         'pimage',

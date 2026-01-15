@@ -200,6 +200,8 @@ GET /general/properties?city=Harare&min_price=100&max_price=500&property_type=ro
       "price": 250,
       "location": "Avondale",
       "city": "Harare",
+      "latitude": -17.8252,
+      "longitude": 31.0335,
       "property_type": "room",
       "amenities": ["WiFi", "Water", "Electricity"],
       "availability_status": "Available",
@@ -242,6 +244,8 @@ Authorization: Bearer {token}
     "price": 250,
     "location": "Avondale",
     "city": "Harare",
+    "latitude": -17.8252,
+    "longitude": 31.0335,
     "property_type": "room",
     "amenities": ["WiFi", "Water", "Electricity"],
     "availability_status": "Available",
@@ -475,6 +479,8 @@ pcontent: Spacious room with modern amenities
 price: 250
 location: Avondale
 city: Harare
+latitude: -17.8252
+longitude: 31.0335
 property_type: room
 bedroom: 1
 bathroom: 1
@@ -497,6 +503,8 @@ pimage4: [file]
 | price | number | Yes | Monthly rent |
 | location | string | Yes | Specific location/suburb |
 | city | string | Yes | City name |
+| latitude | number | No | Latitude coordinate (-90 to 90) |
+| longitude | number | No | Longitude coordinate (-180 to 180) |
 | property_type | string | Yes | room, cottage, flat, house |
 | bedroom | integer | No | Number of bedrooms |
 | bathroom | integer | No | Number of bathrooms |
@@ -544,6 +552,8 @@ Content-Type: application/json
 {
   "title": "Updated Room Title",
   "price": 300,
+  "latitude": -17.8252,
+  "longitude": 31.0335,
   "availability_status": "Occupied"
 }
 ```

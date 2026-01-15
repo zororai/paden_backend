@@ -22,7 +22,8 @@ use App\Http\Controllers\Api\Auth\{
     PasswordResetController,
     LoginController,
     SocialAuthController,
-    EmailVerificationController
+    EmailVerificationController,
+    SmsVerificationController
 };
 use App\Http\Controllers\Api\General\{
     GeneralRegisterController,
@@ -51,6 +52,11 @@ Route::post('/useregister', [RegisterController::class, 'register']);
 Route::post('password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [PasswordResetController::class, 'reset']);
 
+// ✅ SMS Verification Routes
+Route::post('/login/request-code', [SmsVerificationController::class, 'requestCode'])->middleware('throttle:5,1');
+Route::post('/login/verify-code', [SmsVerificationController::class, 'verifyCode'])->middleware('throttle:10,1');
+Route::post('/login/resend-code', [SmsVerificationController::class, 'resendCode'])->middleware('throttle:3,1');
+
 // ✅ Device-based Auth Routes (protected)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [LoginController::class, 'me']);
@@ -60,11 +66,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/devices/{deviceId}', [LoginController::class, 'logoutDevice']);
 });
 
-// ✅ Email Verification Routes (require authentication)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/email/verify', [EmailVerificationController::class, 'verify']);
-    Route::post('/email/resend', [EmailVerificationController::class, 'resend']);
-});
 
 // ✅ Social Login (Google)
 Route::get('/auth/google/redirect', function () {

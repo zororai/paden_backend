@@ -173,6 +173,8 @@ class GeneralLandlordController extends Controller
      *                 @OA\Property(property="price", type="number"),
      *                 @OA\Property(property="location", type="string"),
      *                 @OA\Property(property="city", type="string"),
+     *                 @OA\Property(property="latitude", type="number", example=-17.8252),
+     *                 @OA\Property(property="longitude", type="number", example=31.0335),
      *                 @OA\Property(property="property_type", type="string", enum={"room", "cottage", "flat", "house"}),
      *                 @OA\Property(property="amenities", type="string"),
      *                 @OA\Property(property="bedrooms", type="integer"),
@@ -200,6 +202,8 @@ class GeneralLandlordController extends Controller
             'price'         => 'required|numeric|min:0',
             'location'      => 'required|string|max:255',
             'city'          => 'nullable|string|max:255',
+            'latitude'      => 'nullable|numeric|between:-90,90',
+            'longitude'     => 'nullable|numeric|between:-180,180',
             'property_type' => 'required|string|in:room,cottage,flat,house',
             'amenities'     => 'nullable|string',
             'bedrooms'      => 'nullable|integer|min:0',
@@ -244,6 +248,8 @@ class GeneralLandlordController extends Controller
             'price'               => $request->price,
             'location'            => $request->location,
             'city'                => $request->city,
+            'latitude'            => $request->latitude,
+            'longitude'           => $request->longitude,
             'property_type'       => $request->property_type,
             'housing_context'     => 'general',
             'amenities'           => $request->amenities,
@@ -322,6 +328,8 @@ class GeneralLandlordController extends Controller
             'price'               => 'nullable|numeric|min:0',
             'location'            => 'nullable|string|max:255',
             'city'                => 'nullable|string|max:255',
+            'latitude'            => 'nullable|numeric|between:-90,90',
+            'longitude'           => 'nullable|numeric|between:-180,180',
             'property_type'       => 'nullable|string|in:room,cottage,flat,house',
             'amenities'           => 'nullable|string',
             'availability_status' => 'nullable|string|in:active,inactive',
@@ -342,6 +350,8 @@ class GeneralLandlordController extends Controller
         if ($request->has('price')) $updateData['price'] = $request->price;
         if ($request->has('location')) $updateData['location'] = $request->location;
         if ($request->has('city')) $updateData['city'] = $request->city;
+        if ($request->has('latitude')) $updateData['latitude'] = $request->latitude;
+        if ($request->has('longitude')) $updateData['longitude'] = $request->longitude;
         if ($request->has('property_type')) $updateData['property_type'] = $request->property_type;
         if ($request->has('amenities')) $updateData['amenities'] = $request->amenities;
         if ($request->has('availability_status')) $updateData['availability_status'] = $request->availability_status;
