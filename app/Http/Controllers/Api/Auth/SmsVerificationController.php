@@ -54,10 +54,14 @@ class SmsVerificationController extends Controller
             ], 422);
         }
 
-        // Format phone number to international format FIRST
+        // Format phone number to international format
         $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
 
+        // Try to find user with formatted phone first, then raw phone (for backward compatibility)
         $user = User::where('phone', $formattedPhone)->first();
+        if (!$user) {
+            $user = User::where('phone', $request->phone)->first();
+        }
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -66,6 +70,7 @@ class SmsVerificationController extends Controller
             ], 401);
         }
 
+        // Store verification code with formatted phone for consistency
         $verificationCode = VerificationCode::createForPhone($formattedPhone);
 
         $smsResult = SmsHelper::sendVerificationCode(
@@ -152,7 +157,11 @@ class SmsVerificationController extends Controller
 
         $verificationCode->update(['verified' => true]);
 
+        // Try to find user with formatted phone first, then raw phone
         $user = User::where('phone', $formattedPhone)->first();
+        if (!$user) {
+            $user = User::where('phone', $request->phone)->first();
+        }
 
         if (!$user) {
             return response()->json([
@@ -232,10 +241,14 @@ class SmsVerificationController extends Controller
             ], 422);
         }
 
-        // Format phone number to international format FIRST
+        // Format phone number to international format
         $formattedPhone = SmsHelper::formatPhoneNumber($request->phone);
 
+        // Try to find user with formatted phone first, then raw phone
         $user = User::where('phone', $formattedPhone)->first();
+        if (!$user) {
+            $user = User::where('phone', $request->phone)->first();
+        }
 
         if (!$user) {
             return response()->json([
@@ -244,6 +257,7 @@ class SmsVerificationController extends Controller
             ], 404);
         }
 
+        // Store verification code with formatted phone for consistency
         $verificationCode = VerificationCode::createForPhone($formattedPhone);
 
         $smsResult = SmsHelper::sendVerificationCode(
