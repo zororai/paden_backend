@@ -53,13 +53,14 @@ class GeneralRegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
             'surname'  => 'nullable|string|max:255',
-            'email'    => 'nullable|string|email|max:255|unique:users',
-            'phone'    => 'required_without:email|string|max:20|unique:users',
+            'email'    => 'nullable|string|email|max:255|unique:users,email',
+            'phone'    => 'required_without:email|string|max:20|unique:users,phone',
             'password' => 'required|string|min:6|confirmed',
             'role'     => 'required|string|in:tenant,landlord',
         ], [
             'email.unique' => 'This email address is already registered.',
             'phone.unique' => 'This phone number is already registered.',
+            'phone.required_without' => 'Either phone number or email is required.',
             'password.confirmed' => 'Passwords do not match.',
             'role.in' => 'Role must be either tenant or landlord.',
         ]);
@@ -68,6 +69,13 @@ class GeneralRegisterController extends Controller
             return response()->json([
                 'status' => false,
                 'errors' => $validator->errors()
+            ], 422);
+        }
+
+        if (!$request->email && !$request->phone) {
+            return response()->json([
+                'status' => false,
+                'errors' => ['contact' => ['Either email or phone number is required.']]
             ], 422);
         }
 
