@@ -45,6 +45,9 @@ class SmsVerificationController extends Controller
         $validator = Validator::make($request->all(), [
             'phone'    => 'required|string',
             'password' => 'required|string|min:6',
+            'device_id'   => 'nullable|string|max:255',
+            'device_name' => 'nullable|string|max:255',
+            'platform'    => 'nullable|in:android,ios,web',
         ]);
 
         if ($validator->fails()) {
@@ -68,6 +71,52 @@ class SmsVerificationController extends Controller
                 'status'  => false,
                 'message' => 'Invalid credentials',
             ], 401);
+        }
+
+        // Check if phone is already verified
+        if ($user->phone_verified_at !== null) {
+            // Phone already verified, skip SMS and log in directly
+            $deviceId = $request->device_id ?? 'default-device';
+            $tokenName = "device:{$deviceId}";
+
+            $user->tokens()->where('name', $tokenName)->delete();
+
+            if ($request->device_id) {
+                $device = UserDevice::updateOrCreate(
+                    [
+                        'user_id'   => $user->id,
+                        'device_id' => $deviceId,
+                    ],
+                    [
+                        'device_name'  => $request->device_name,
+                        'platform'     => $request->platform,
+                        'last_seen_at' => now(),
+                    ]
+                );
+            }
+
+            $token = $user->createToken($tokenName)->plainTextToken;
+
+            return response()->json([
+                'status'  => true,
+                'already_verified' => true,
+                'message' => 'Phone already verified, login successful',
+                'user'    => [
+                    'id'               => $user->id,
+                    'name'             => $user->name,
+                    'phone'            => $user->phone,
+                    'email'            => $user->email,
+                    'role'             => $user->role,
+                    'housing_context'  => $user->housing_context ?? 'student',
+                    'profile_complete' => $user->profile_complete ?? false,
+                    'image'            => $user->image ? asset('storage/' . $user->image) : null,
+                ],
+                'token' => $token,
+                'device' => $request->device_id ? [
+                    'device_id' => $device->device_id,
+                    'platform'  => $device->platform,
+                ] : null,
+            ], 200);
         }
 
         // Store verification code with formatted phone for consistency
@@ -168,6 +217,12 @@ class SmsVerificationController extends Controller
                 'status'  => false,
                 'message' => 'User not found',
             ], 404);
+        }
+
+        // Mark phone as verified
+        if ($user->phone_verified_at === null) {
+            $user->phone_verified_at = now();
+            $user->save();
         }
 
         $deviceId = $request->device_id;

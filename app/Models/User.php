@@ -34,6 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_complete',
         'preferred_contact',
         'whatsapp_enabled',
+        'phone_verified_at',
     ];
 
   //public function likes()
@@ -78,6 +79,7 @@ public function devices()
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime',
         'password' => 'hashed',
         'permissions' => 'array',
         'profile_complete' => 'boolean',
