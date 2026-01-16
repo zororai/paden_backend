@@ -82,6 +82,7 @@ class GeneralLandlordController extends Controller
             'phone'             => 'required|string|max:20',
             'preferred_contact' => 'required|string|in:phone,email,whatsapp',
             'whatsapp_enabled'  => 'boolean',
+            'image'             => 'nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -92,13 +93,23 @@ class GeneralLandlordController extends Controller
         }
 
         $user = auth()->user();
-        $user->update([
+        
+        $updateData = [
             'name'              => $request->full_name,
             'phone'             => $request->phone,
             'preferred_contact' => $request->preferred_contact,
             'whatsapp_enabled'  => $request->whatsapp_enabled ?? false,
             'profile_complete'  => true,
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profile', 'public');
+            $updateData['image'] = $imagePath;
+        } else {
+            $updateData['image'] = null;
+        }
+
+        $user->update($updateData);
 
         return response()->json([
             'status' => true,
@@ -110,6 +121,7 @@ class GeneralLandlordController extends Controller
                 'phone' => $user->phone,
                 'preferred_contact' => $user->preferred_contact,
                 'whatsapp_enabled' => $user->whatsapp_enabled,
+                'image' => $user->image ? asset('storage/' . $user->image) : null,
             ]
         ], 200);
     }
