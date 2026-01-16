@@ -120,52 +120,57 @@
                     "Userlogin"
                 ],
                 "summary": "User Login (Email or Phone)",
-                "description": "Login using either email OR phone with password",
+                "description": "Login using either email OR phone with password. Provide device_id and platform for device tracking.",
                 "operationId": "d41c2ea50a8fe40296a4130751e9800f",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "oneOf": [
-                                    {
-                                        "required": [
-                                            "email",
-                                            "password"
-                                        ],
-                                        "properties": {
-                                            "email": {
-                                                "type": "string",
-                                                "format": "email",
-                                                "example": "john@example.com"
-                                            },
-                                            "password": {
-                                                "type": "string",
-                                                "format": "password",
-                                                "example": "password123"
-                                            }
-                                        },
-                                        "type": "object"
+                                "required": [
+                                    "password",
+                                    "device_id",
+                                    "platform"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Required if phone not provided",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
                                     },
-                                    {
-                                        "required": [
-                                            "phone",
-                                            "password"
+                                    "phone": {
+                                        "description": "Required if email not provided",
+                                        "type": "string",
+                                        "example": "+263771234567"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "device_id": {
+                                        "description": "Unique device identifier",
+                                        "type": "string",
+                                        "example": "unique-device-id-123"
+                                    },
+                                    "device_name": {
+                                        "description": "Optional device name",
+                                        "type": "string",
+                                        "example": "iPhone 14 Pro"
+                                    },
+                                    "platform": {
+                                        "description": "Device platform",
+                                        "type": "string",
+                                        "enum": [
+                                            "android",
+                                            "ios",
+                                            "web"
                                         ],
-                                        "properties": {
-                                            "phone": {
-                                                "type": "string",
-                                                "example": "+263771234567"
-                                            },
-                                            "password": {
-                                                "type": "string",
-                                                "format": "password",
-                                                "example": "password123"
-                                            }
-                                        },
-                                        "type": "object"
+                                        "example": "android"
                                     }
-                                ]
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -220,6 +225,23 @@
                                         "token": {
                                             "type": "string",
                                             "example": "1|XyZabc123..."
+                                        },
+                                        "device": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "device_id": {
+                                                    "type": "string",
+                                                    "example": "unique-device-id-123"
+                                                },
+                                                "remember_me": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -246,6 +268,9 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation errors"
                     }
                 }
             }
@@ -355,8 +380,6 @@
                                     "password",
                                     "password_confirmation",
                                     "university",
-                                    "type",
-                                    "phone",
                                     "role"
                                 ],
                                 "properties": {
@@ -369,9 +392,15 @@
                                         "example": "Doe"
                                     },
                                     "email": {
+                                        "description": "Required if phone not provided",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
+                                    },
+                                    "phone": {
+                                        "description": "Required if email not provided",
+                                        "type": "string",
+                                        "example": "+263771234567"
                                     },
                                     "password": {
                                         "type": "string",
@@ -390,10 +419,6 @@
                                     "role": {
                                         "type": "string",
                                         "example": "user"
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "example": "+263771234567"
                                     }
                                 },
                                 "type": "object"
@@ -431,6 +456,140 @@
                     },
                     "422": {
                         "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/api/login/request-code": {
+            "post": {
+                "tags": [
+                    "SMS Verification"
+                ],
+                "summary": "Request SMS verification code for login",
+                "operationId": "306183a598cf648f60c70c3fbb4426e7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+263771234567"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification code sent"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/login/verify-code": {
+            "post": {
+                "tags": [
+                    "SMS Verification"
+                ],
+                "summary": "Verify SMS code and complete login",
+                "operationId": "69c50485820a1599c8cfa00bdf154e0c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "code",
+                                    "device_id",
+                                    "platform"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+263771234567"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "device_id": {
+                                        "type": "string",
+                                        "example": "device-unique-id"
+                                    },
+                                    "device_name": {
+                                        "type": "string",
+                                        "example": "iPhone 13"
+                                    },
+                                    "platform": {
+                                        "type": "string",
+                                        "enum": [
+                                            "android",
+                                            "ios",
+                                            "web"
+                                        ],
+                                        "example": "android"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful"
+                    },
+                    "401": {
+                        "description": "Invalid or expired code"
+                    }
+                }
+            }
+        },
+        "/api/login/resend-code": {
+            "post": {
+                "tags": [
+                    "SMS Verification"
+                ],
+                "summary": "Resend verification code",
+                "operationId": "270e1cd54cddc9602dac8a3bd1adb0cf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+263771234567"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification code resent"
                     }
                 }
             }
@@ -1650,6 +1809,14 @@
                                     },
                                     "city": {
                                         "type": "string"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "example": -17.8252
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "example": 31.0335
                                     },
                                     "property_type": {
                                         "type": "string",
@@ -4144,6 +4311,10 @@
         {
             "name": "Email_Verification",
             "description": "Email verification endpoints"
+        },
+        {
+            "name": "SMS Verification",
+            "description": "SMS-based authentication endpoints"
         },
         {
             "name": "Chat",

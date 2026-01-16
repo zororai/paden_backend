@@ -10,27 +10,21 @@ use App\Http\Controllers\Api\HomeController;
 use App\Models\User;
 use App\Models\UserDevice;
 /**
- /**
  * @OA\Post(
  *     path="/api/login",
  *     tags={"Userlogin"},
  *     summary="User Login (Email or Phone)",
- *     description="Login using either email OR phone with password",
+ *     description="Login using either email OR phone with password. Provide device_id and platform for device tracking.",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             oneOf={
- *                 @OA\Schema(
- *                     required={"email","password"},
- *                     @OA\Property(property="email", type="string", format="email", example="john@example.com"),
- *                     @OA\Property(property="password", type="string", format="password", example="password123")
- *                 ),
- *                 @OA\Schema(
- *                     required={"phone","password"},
- *                     @OA\Property(property="phone", type="string", example="+263771234567"),
- *                     @OA\Property(property="password", type="string", format="password", example="password123")
- *                 )
- *             }
+ *             required={"password", "device_id", "platform"},
+ *             @OA\Property(property="email", type="string", format="email", example="john@example.com", description="Required if phone not provided"),
+ *             @OA\Property(property="phone", type="string", example="+263771234567", description="Required if email not provided"),
+ *             @OA\Property(property="password", type="string", format="password", example="password123"),
+ *             @OA\Property(property="device_id", type="string", example="unique-device-id-123", description="Unique device identifier"),
+ *             @OA\Property(property="device_name", type="string", example="iPhone 14 Pro", description="Optional device name"),
+ *             @OA\Property(property="platform", type="string", enum={"android", "ios", "web"}, example="android", description="Device platform")
  *         )
  *     ),
  *     @OA\Response(
@@ -47,7 +41,12 @@ use App\Models\UserDevice;
  *                 @OA\Property(property="role", type="string", example="teacher"),
  *                 @OA\Property(property="image", type="string", nullable=true, example="https://yourdomain.com/storage/avatar.jpg")
  *             ),
- *             @OA\Property(property="token", type="string", example="1|XyZabc123...")
+ *             @OA\Property(property="token", type="string", example="1|XyZabc123..."),
+ *             @OA\Property(property="device", type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="device_id", type="string", example="unique-device-id-123"),
+ *                 @OA\Property(property="remember_me", type="boolean", example=true)
+ *             )
  *         )
  *     ),
  *     @OA\Response(
@@ -57,7 +56,8 @@ use App\Models\UserDevice;
  *             @OA\Property(property="status", type="boolean", example=false),
  *             @OA\Property(property="message", type="string", example="Invalid credentials")
  *         )
- *     )
+ *     ),
+ *     @OA\Response(response=422, description="Validation errors")
  * )
  */
 
@@ -67,8 +67,8 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'     => 'required_without:phone|email',
-            'phone'     => 'required_without:email|string',
+            'email'     => 'required_without:phone|nullable|string',
+            'phone'     => 'required_without:email|nullable|string',
             'password'  => 'required|string|min:6',
             'device_id' => 'required|string|max:255',
             'device_name' => 'nullable|string|max:255',
@@ -76,9 +76,16 @@ class LoginController extends Controller
         ]);
 
         // Find user by email or phone
-        $user = $request->email
-            ? User::where('email', $request->email)->first()
-            : User::where('phone', $request->phone)->first();
+        if ($request->email) {
+            // Check if email looks like a phone number
+            if (preg_match('/^[0-9+\-\s()]+$/', $request->email)) {
+                $user = User::where('phone', $request->email)->first();
+            } else {
+                $user = User::where('email', $request->email)->first();
+            }
+        } else {
+            $user = User::where('phone', $request->phone)->first();
+        }
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([

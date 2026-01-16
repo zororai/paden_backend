@@ -234,18 +234,33 @@ This document outlines the complete process flows for **Tenants** and **Landlord
 | Update Property | `/api/general/landlord/properties/{id}` | PUT |
 | Delete Property | `/api/general/landlord/properties/{id}` | DELETE |
 
-**Property Attributes:**
+**Property Creation Fields:**
 
-| Field | Description |
-|-------|-------------|
-| title | Property listing title |
-| description | Detailed description |
-| price | Monthly rental amount |
-| location | Address/area |
-| property_type | room, cottage, flat, house |
-| amenities | List of available amenities |
-| images | Property photos |
-| availability_status | Available/Occupied |
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | ✅ Yes | Property listing title |
+| `description` | string | ✅ Yes | Detailed description |
+| `price` | numeric | ✅ Yes | Monthly rental amount |
+| `location` | string | ✅ Yes | Address/area |
+| `city` | string | ❌ Optional | City name |
+| `latitude` | numeric | ❌ Optional | GPS latitude (-90 to 90) |
+| `longitude` | numeric | ❌ Optional | GPS longitude (-180 to 180) |
+| `property_type` | enum | ✅ Yes | `room`, `cottage`, `flat`, `house` |
+| `amenities` | string | ❌ Optional | Comma-separated amenities |
+| `bedrooms` | integer | ❌ Optional | Number of bedrooms |
+| `bathrooms` | integer | ❌ Optional | Number of bathrooms |
+| `size` | string | ❌ Optional | Property size (e.g., "100 sqm") |
+| `main_image` | file | ❌ Optional | Main property photo (max 5MB) |
+| `kitchen_image` | file | ❌ Optional | Kitchen photo (max 5MB) |
+| `bathroom_image` | file | ❌ Optional | Bathroom photo (max 5MB) |
+| `outside_image` | file | ❌ Optional | Exterior photo (max 5MB) |
+
+**Auto-Set Fields:**
+- `housing_context`: `"general"`
+- `status`: `"Available"`
+- `availability_status`: `"active"`
+- `uid`: Landlord's user ID
+- `date`: Current timestamp
 
 ---
 
