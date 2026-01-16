@@ -91,6 +91,7 @@ class SmsVerificationController extends Controller
                         'device_name'  => $request->device_name,
                         'platform'     => $request->platform,
                         'last_seen_at' => now(),
+                        'remember_me'  => true,
                     ]
                 );
             }
@@ -113,8 +114,9 @@ class SmsVerificationController extends Controller
                 ],
                 'token' => $token,
                 'device' => $request->device_id ? [
-                    'device_id' => $device->device_id,
-                    'platform'  => $device->platform,
+                    'device_id'   => $device->device_id,
+                    'platform'    => $device->platform,
+                    'remember_me' => $device->remember_me,
                 ] : null,
             ], 200);
         }
@@ -239,6 +241,7 @@ class SmsVerificationController extends Controller
                 'device_name'  => $request->device_name,
                 'platform'     => $request->platform,
                 'last_seen_at' => now(),
+                'remember_me'  => true,
             ]
         );
 
@@ -259,8 +262,9 @@ class SmsVerificationController extends Controller
             ],
             'token' => $token,
             'device' => [
-                'device_id' => $device->device_id,
-                'platform'  => $device->platform,
+                'device_id'   => $device->device_id,
+                'platform'    => $device->platform,
+                'remember_me' => $device->remember_me,
             ],
         ], 200);
     }

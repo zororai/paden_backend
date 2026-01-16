@@ -100,9 +100,10 @@ class LoginController extends Controller
                 'device_id' => $deviceId,
             ],
             [
-                'device_name' => $request->device_name,
-                'platform'    => $request->platform,
+                'device_name'  => $request->device_name,
+                'platform'     => $request->platform,
                 'last_seen_at' => now(),
+                'remember_me'  => true,
             ]
         );
 
@@ -129,8 +130,9 @@ class LoginController extends Controller
             ], $loginIdentifier),
             'token' => $token,
             'device' => [
-                'device_id' => $device->device_id,
-                'platform'  => $device->platform,
+                'device_id'   => $device->device_id,
+                'platform'    => $device->platform,
+                'remember_me' => $device->remember_me,
             ],
         ]);
     }

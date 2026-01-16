@@ -16,10 +16,12 @@ class UserDevice extends Model
         'device_name',
         'platform',
         'last_seen_at',
+        'remember_me',
     ];
 
     protected $casts = [
         'last_seen_at' => 'datetime',
+        'remember_me' => 'boolean',
     ];
 
     /**
