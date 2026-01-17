@@ -236,59 +236,68 @@ class GeneralLandlordController extends Controller
 
         $user = auth()->user();
 
-        $mainImagePath = null;
-        $kitchenImagePath = null;
-        $bathroomImagePath = null;
-        $outsideImagePath = null;
+        try {
+            $mainImagePath = null;
+            $kitchenImagePath = null;
+            $bathroomImagePath = null;
+            $outsideImagePath = null;
 
-        if ($request->hasFile('main_image')) {
-            $mainImagePath = $request->file('main_image')->store('properties', 'public');
-        }
-        if ($request->hasFile('kitchen_image')) {
-            $kitchenImagePath = $request->file('kitchen_image')->store('properties', 'public');
-        }
-        if ($request->hasFile('bathroom_image')) {
-            $bathroomImagePath = $request->file('bathroom_image')->store('properties', 'public');
-        }
-        if ($request->hasFile('outside_image')) {
-            $outsideImagePath = $request->file('outside_image')->store('properties', 'public');
-        }
+            if ($request->hasFile('main_image')) {
+                $mainImagePath = $request->file('main_image')->store('properties', 'public');
+            }
+            if ($request->hasFile('kitchen_image')) {
+                $kitchenImagePath = $request->file('kitchen_image')->store('properties', 'public');
+            }
+            if ($request->hasFile('bathroom_image')) {
+                $bathroomImagePath = $request->file('bathroom_image')->store('properties', 'public');
+            }
+            if ($request->hasFile('outside_image')) {
+                $outsideImagePath = $request->file('outside_image')->store('properties', 'public');
+            }
 
-        $property = Properties::create([
-            'title'               => $request->title,
-            'pcontent'            => $request->description,
-            'price'               => $request->price,
-            'location'            => $request->location,
-            'city'                => $request->city,
-            'latitude'            => $request->latitude,
-            'longitude'           => $request->longitude,
-            'property_type'       => $request->property_type,
-            'housing_context'     => 'general',
-            'amenities'           => $request->amenities,
-            'bedroom'             => $request->bedrooms,
-            'bathroom'            => $request->bathrooms,
-            'size'                => $request->size,
-            'uid'                 => $user->id,
-            'status'              => 'Available',
-            'availability_status' => 'active',
-            'pimage'              => $mainImagePath,
-            'pimage1'             => $kitchenImagePath,
-            'pimage2'             => $bathroomImagePath,
-            'pimage3'             => $outsideImagePath,
-            'date'                => Carbon::now(),
-            'count'               => 0,
-            'likes'               => 0,
-        ]);
+            $property = Properties::create([
+                'title'               => $request->title,
+                'pcontent'            => $request->description,
+                'price'               => $request->price,
+                'location'            => $request->location,
+                'city'                => $request->city,
+                'latitude'            => $request->latitude,
+                'longitude'           => $request->longitude,
+                'property_type'       => $request->property_type,
+                'housing_context'     => 'general',
+                'amenities'           => $request->amenities,
+                'bedroom'             => $request->bedrooms,
+                'bathroom'            => $request->bathrooms,
+                'size'                => $request->size,
+                'uid'                 => $user->id,
+                'status'              => 'Available',
+                'availability_status' => 'active',
+                'pimage'              => $mainImagePath,
+                'pimage1'             => $kitchenImagePath,
+                'pimage2'             => $bathroomImagePath,
+                'pimage3'             => $outsideImagePath,
+                'date'                => Carbon::now(),
+                'count'               => 0,
+                'likes'               => 0,
+            ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Property created successfully',
-            'data' => [
-                'id' => $property->id,
-                'title' => $property->title,
-                'property_type' => $property->property_type,
-            ]
-        ], 201);
+            return response()->json([
+                'status' => true,
+                'message' => 'Property created successfully',
+                'data' => [
+                    'id' => $property->id,
+                    'title' => $property->title,
+                    'property_type' => $property->property_type,
+                ]
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to create property',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
