@@ -416,6 +416,66 @@ class GeneralLandlordController extends Controller
      *     @OA\Response(response=404, description="Property not found")
      * )
      */
+    /**
+     * @OA\Get(
+     *     path="/api/general/landlord/properties/{id}",
+     *     tags={"General Housing Landlord"},
+     *     summary="Get a single property details",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Property details"),
+     *     @OA\Response(response=404, description="Property not found")
+     * )
+     */
+    public function show($id)
+    {
+        $user = auth()->user();
+        $property = Properties::where('id', $id)
+            ->where('uid', $user->id)
+            ->where('housing_context', 'general')
+            ->first();
+
+        if (!$property) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Property not found or access denied'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'id' => $property->id,
+                'title' => $property->title,
+                'description' => $property->pcontent,
+                'price' => $property->price,
+                'location' => $property->location,
+                'city' => $property->city,
+                'latitude' => $property->latitude,
+                'longitude' => $property->longitude,
+                'property_type' => $property->property_type,
+                'amenities' => $property->amenities,
+                'availability_status' => $property->availability_status,
+                'bedrooms' => $property->bedroom,
+                'bathrooms' => $property->bathroom,
+                'size' => $property->size,
+                'images' => [
+                    'main' => $property->pimage ? asset('storage/' . $property->pimage) : null,
+                    'kitchen' => $property->pimage1 ? asset('storage/' . $property->pimage1) : null,
+                    'bathroom' => $property->pimage2 ? asset('storage/' . $property->pimage2) : null,
+                    'outside' => $property->pimage3 ? asset('storage/' . $property->pimage3) : null,
+                ],
+                'created_at' => $property->created_at,
+                'updated_at' => $property->updated_at,
+            ]
+        ], 200);
+    }
+
     public function destroy($id)
     {
         $user = auth()->user();

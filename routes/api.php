@@ -180,6 +180,7 @@ Route::middleware(['auth:sanctum', 'role:landlord', 'housing.context:general'])-
     // Property routes (profile completion required)
     Route::middleware('profile.complete')->group(function () {
         Route::get('/properties', [GeneralLandlordController::class, 'getProperties']);
+        Route::get('/properties/{id}', [GeneralLandlordController::class, 'show']);
         Route::post('/properties', [GeneralLandlordController::class, 'store']);
         Route::put('/properties/{id}', [GeneralLandlordController::class, 'update']);
         Route::delete('/properties/{id}', [GeneralLandlordController::class, 'destroy']);
