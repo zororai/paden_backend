@@ -285,7 +285,7 @@ class GeneralLandlordController extends Controller
                 'isFeatured'          => '0',
                 'uid'                 => $user->id,
                 'status'              => 'Available',
-                'availability_status' => 'active',
+                'availability_status' => 'available',
                 'pimage'              => $mainImagePath,
                 'pimage1'             => $kitchenImagePath,
                 'pimage2'             => $bathroomImagePath,
@@ -335,7 +335,7 @@ class GeneralLandlordController extends Controller
      *             @OA\Property(property="location", type="string"),
      *             @OA\Property(property="property_type", type="string"),
      *             @OA\Property(property="amenities", type="string"),
-     *             @OA\Property(property="availability_status", type="string", enum={"active", "inactive"})
+     *             @OA\Property(property="availability_status", type="string", enum={"available", "occupied"})
      *         )
      *     ),
      *     @OA\Response(response=200, description="Property updated"),
@@ -368,7 +368,7 @@ class GeneralLandlordController extends Controller
             'longitude'           => 'nullable|numeric|between:-180,180',
             'property_type'       => 'nullable|string|in:room,cottage,flat,house',
             'amenities'           => 'nullable|string',
-            'availability_status' => 'nullable|string|in:active,inactive',
+            'availability_status' => 'nullable|string|in:available,occupied',
             'bedrooms'            => 'nullable|integer|min:0',
             'bathrooms'           => 'nullable|integer|min:0',
         ]);
