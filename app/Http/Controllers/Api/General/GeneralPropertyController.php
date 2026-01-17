@@ -93,7 +93,7 @@ class GeneralPropertyController extends Controller
                 'longitude' => $property->longitude,
                 'property_type' => $property->property_type,
                 'amenities' => $property->amenities,
-                'availability_status' => $property->availability_status ?? $property->status,
+                'availability_status' => $property->availability_status ?? 'available',
                 'image' => $property->pimage ? asset('storage/' . $property->pimage) : null,
                 'images' => [
                     'main' => $property->pimage ? asset('storage/' . $property->pimage) : null,
@@ -161,7 +161,7 @@ class GeneralPropertyController extends Controller
                 'longitude' => $property->longitude,
                 'property_type' => $property->property_type,
                 'amenities' => $property->amenities,
-                'availability_status' => $property->availability_status ?? $property->status,
+                'availability_status' => $property->availability_status ?? 'available',
                 'bedrooms' => $property->bedroom,
                 'bathrooms' => $property->bathroom,
                 'size' => $property->size,

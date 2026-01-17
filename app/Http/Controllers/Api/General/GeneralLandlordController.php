@@ -152,7 +152,7 @@ class GeneralLandlordController extends Controller
                     'city' => $property->city,
                     'property_type' => $property->property_type,
                     'amenities' => $property->amenities,
-                    'availability_status' => $property->availability_status ?? $property->status,
+                    'availability_status' => $property->availability_status ?? 'available',
                     'status' => $property->status,
                     'image' => $property->pimage ? asset('storage/' . $property->pimage) : null,
                     'created_at' => $property->created_at,
