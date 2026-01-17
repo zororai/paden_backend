@@ -28,7 +28,7 @@ return new class extends Migration
                 $table->decimal('longitude', 11, 8)->nullable()->after('latitude');
             }
             if (!Schema::hasColumn('properties', 'availability_status')) {
-                $table->string('availability_status')->default('active')->after('status');
+                $table->string('availability_status')->default('available')->after('status');
             }
             if (!Schema::hasColumn('properties', 'likes')) {
                 $table->integer('likes')->default(0)->after('like');
