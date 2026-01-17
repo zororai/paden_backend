@@ -61,9 +61,8 @@ class GeneralLandlordController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"full_name", "phone", "preferred_contact"},
+     *             required={"full_name", "preferred_contact"},
      *             @OA\Property(property="full_name", type="string", example="John Doe"),
-     *             @OA\Property(property="phone", type="string", example="+263771234567"),
      *             @OA\Property(property="preferred_contact", type="string", example="phone"),
      *             @OA\Property(property="whatsapp_enabled", type="boolean", example=true)
      *         )
@@ -79,7 +78,6 @@ class GeneralLandlordController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'full_name'         => 'required|string|max:255',
-            'phone'             => 'required|string|max:20',
             'preferred_contact' => 'required|string|in:phone,email,whatsapp',
             'whatsapp_enabled'  => 'boolean',
             'image'             => 'nullable|image|max:2048',
@@ -96,7 +94,6 @@ class GeneralLandlordController extends Controller
         
         $updateData = [
             'name'              => $request->full_name,
-            'phone'             => $request->phone,
             'preferred_contact' => $request->preferred_contact,
             'whatsapp_enabled'  => $request->whatsapp_enabled ?? false,
             'profile_complete'  => true,
