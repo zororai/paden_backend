@@ -24,7 +24,7 @@ class UpdateUserController extends Controller
      *     path="/api/upload",
      *     tags={"Upload-user-profile"},
      *     summary="Update user profile",
-     *     description="Update user's phone number and profile image",
+     *     description="Update user's profile image",
 *     security={{
      *         "bearerAuth": {}
      *     }},
@@ -33,9 +33,8 @@ class UpdateUserController extends Controller
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
-     *                 required={"image", "phone"},
-     *                 @OA\Property(property="image", type="string", format="binary", description="Profile image to upload"),
-     *                 @OA\Property(property="phone", type="string", description="User phone number")
+     *                 required={"image"},
+     *                 @OA\Property(property="image", type="string", format="binary", description="Profile image to upload")
      * 
      *             )
      *         )
@@ -59,8 +58,6 @@ class UpdateUserController extends Controller
         // Validate the incoming request
         $validatedData = $request->validate([
             'image' => 'required|image|max:2048',
-            'phone' => 'required|string|max:15',
-   
         ]);
 
  
@@ -75,7 +72,6 @@ class UpdateUserController extends Controller
         $user->image = $imagePath;
     }
         $user->image = $imagePath;
-        $user->phone = $validatedData['phone'];
         $user->save();
 
         // Check if the user has regMoney records
