@@ -16,6 +16,7 @@ class regMoney extends Model
         'amount',
         'reference_number',
         'phone_number',
+        'admin_paid',
     ];
 
     public function user()

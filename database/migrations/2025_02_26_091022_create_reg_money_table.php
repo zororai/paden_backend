@@ -17,6 +17,7 @@ return new class extends Migration
             $table->double('amount');
             $table->string('reference_number');
             $table->string('phone_number');
+            $table->boolean('admin_paid')->default(false);
 
             $table->timestamps();
         });

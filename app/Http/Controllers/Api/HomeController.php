@@ -90,15 +90,17 @@ public function index()
     }
 
     // Check if the student has paid the registration fee
-    $hasPaid = RegMoney::where('user_id', $user->id)->exists();
+    // $hasPaid = RegMoney::where('user_id', $user->id)
+    //     ->where('admin_paid', true)
+    //     ->exists();
 
-    if (!$hasPaid) {
-        return response()->json([
-            'message' => 'Payment required',
-            'user' => $user->only(['id', 'name', 'email']),
-            'redirect_url' => url('/payment/regpayment')
-        ], 402);
-    }
+    // if (!$hasPaid) {
+    //     return response()->json([
+    //         'message' => 'Payment required',
+    //         'user' => $user->only(['id', 'name', 'email']),
+    //         'redirect_url' => url('/payment/regpayment')
+    //     ], 402);
+    // }
 
     // Fetch properties from the same city as user's university
     $properties = Properties::where('city', $user->university)->get()->map(function ($property) {
