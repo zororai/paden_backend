@@ -89,18 +89,18 @@ public function index()
         ], 403);
     }
 
-    // Check if the student has paid the registration fee
-    // $hasPaid = RegMoney::where('user_id', $user->id)
-    //     ->where('admin_paid', true)
-    //     ->exists();
-
-    // if (!$hasPaid) {
-    //     return response()->json([
-    //         'message' => 'Payment required',
-    //         'user' => $user->only(['id', 'name', 'email']),
-    //         'redirect_url' => url('/payment/regpayment')
-    //     ], 402);
-    // }
+    // Auto-create payment record if it doesn't exist
+    $hasPaid = RegMoney::where('user_id', $user->id)->exists();
+    
+    if (!$hasPaid) {
+        RegMoney::create([
+            'user_id' => $user->id,
+            'amount' => 0,
+            'reference_number' => 'AUTO-' . $user->id,
+            'phone_number' => $user->phone ?? 'N/A',
+            'admin_paid' => true,
+        ]);
+    }
 
     // Fetch properties from the same city as user's university
     $properties = Properties::where('city', $user->university)->get()->map(function ($property) {
